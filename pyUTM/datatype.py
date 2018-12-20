@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
-# License: MIT
-# Last Change: Tue Dec 11, 2018 at 04:19 PM -0500
+# License: BSD 2-clause
+# Last Change: Thu Dec 20, 2018 at 12:20 PM -0500
 
 import builtins
 import typing

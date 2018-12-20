@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
-# License: MIT
-# Last Change: Thu Dec 06, 2018 at 12:07 PM -0500
+# License: BSD 2-clause
+# Last Change: Thu Dec 20, 2018 at 12:21 PM -0500
 
 import unittest
 import re
