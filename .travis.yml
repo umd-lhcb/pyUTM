@@ -1,0 +1,20 @@
+language: python
+python: 3.7.1
+dist: xenial
+sudo: true
+
+env:
+    - IN_TRAVIS_CI=yes
+
+cache: pip
+
+install:
+    - pip install -r ./requirements.txt
+
+script:
+    - cd ./test
+    - python ./common.unittest.py
+    - python ./datatype.unittest.py
+    - python ./io.unittest.py
+    - python ./selection.unittest.py
+    - python ./legacy.unittest.py
