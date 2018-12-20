@@ -1,5 +1,5 @@
 # pyUTM [![Build status](https://travis-ci.com/umd-lhcb/pyUTM.svg?branch=master)](https://travis-ci.com/umd-lhcb)
-Python library for PCad netlist parsing and mapping generation.
+Python library for Pcad netlist parsing and mapping generation.
 
 ## Requirements
 ```
