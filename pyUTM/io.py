@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Jan 18, 2019 at 09:46 AM -0500
+# Last Change: Fri Jan 18, 2019 at 02:37 PM -0500
 
 import openpyxl
 import re
@@ -180,16 +180,33 @@ class NestedListReader(object):
 
 
 class PcadReader(NestedListReader):
+    def read(self, comps=True, nets=True):
+        expr = super().read()
+        expr_comps = []
+        expr_nets = []
+
+        if comps:
+            expr_comps = filter(lambda i: isinstance(i, list) and
+                                i[0] == 'compInst',
+                                expr)
+
+        if nets:
+            expr_nets = filter(lambda i: isinstance(i, list) and
+                               i[0] == 'net',
+                               expr)
+
+        return (expr_comps, expr_nets)
+
+
+class PcadBackPlaneReader(PcadReader):
     def read(self):
-        pass
+        _, expr_nets = super().read(comps=False)
+        return self.parse_netlist_dict(self.parse_nets(expr_nets))
 
     # Zishuo's original implementation, with some omissions.
-    def readnets(self):
+    def parse_nets(self, nets):
         all_nets_dict = {}
 
-        # First, keep only items that are netlists
-        nets = filter(lambda i: isinstance(i, list) and i[0] == 'net',
-                      super().read())
         for net in nets:
             net_name = net[1].strip('\"')
             # NOTE: unlike Zishuo's original implementation, this list will not
@@ -271,18 +288,13 @@ class PcadReader(NestedListReader):
         return list(filter(lambda x: regex.search(x[0]), nodes_list))
 
 
-class PcadNetsReader(NestedListReader):
-    def read(self):
-        return self.parse_netlist_dict(self.readnets())
-
-
-class PcadNetsReaderCached(PcadReader):
+class PcadBackPlaneReaderCached(PcadBackPlaneReader):
     def __init__(self, cache_dir, *args):
         self.mem = Memory(cache_dir)
         super().__init__(*args)
 
         self.read = self.mem.cache(super().read)
-        self.readnets = self.mem.cache(super().readnets)
+        self.parse_nets = self.mem.cache(super().parse_nets)
 
 
 ############
