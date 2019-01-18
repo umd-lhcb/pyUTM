@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Jan 18, 2019 at 09:47 AM -0500
+# Last Change: Fri Jan 18, 2019 at 02:38 PM -0500
 
 import unittest
 import re
@@ -12,7 +12,7 @@ sys.path.insert(0, '..')
 
 from pyUTM.io import csv_line
 from pyUTM.io import parse_cell_range
-from pyUTM.io import PcadReader
+from pyUTM.io import PcadBackPlaneReader
 from pyUTM.io import make_combinations
 from pyUTM.datatype import NetNode
 
@@ -56,27 +56,27 @@ class ParseCellRangeTester(unittest.TestCase):
         self.assertEqual(final_row, 345)
 
 
-class PcadReaderTester(unittest.TestCase):
+class PcadBackPlaneReaderTester(unittest.TestCase):
     def test_net_node_gen(self):
-        self.assertEqual(PcadReader.net_node_gen(None, None),
+        self.assertEqual(PcadBackPlaneReader.net_node_gen(None, None),
                          NetNode(None, None, None, None))
-        self.assertEqual(PcadReader.net_node_gen(('JD1', '1'), None),
+        self.assertEqual(PcadBackPlaneReader.net_node_gen(('JD1', '1'), None),
                          NetNode('JD1', '1', None, None))
-        self.assertEqual(PcadReader.net_node_gen(None, ('JP1', '1')),
+        self.assertEqual(PcadBackPlaneReader.net_node_gen(None, ('JP1', '1')),
                          NetNode(None, None, 'JP1', '1'))
-        self.assertEqual(PcadReader.net_node_gen(('JD1', '2'), ('JP1', '1')),
+        self.assertEqual(PcadBackPlaneReader.net_node_gen(('JD1', '2'), ('JP1', '1')),
                          NetNode('JD1', '2', 'JP1', '1'))
 
     def test_find_node_match_regex(self):
         self.assertEqual(
-            PcadReader.find_node_match_regex(
+            PcadBackPlaneReader.find_node_match_regex(
                 [('JP1', 1), ('JP2', 1), ('JPL1', 1), ('JP11', 0), ('JD1', 1)],
                 re.compile(r'^JP\d+')),
             [('JP1', 1), ('JP2', 1), ('JP11', 0)]
         )
 
     def test_parse_netlist_dict_dcb_pt(self):
-        reader = PcadReader('/dev/null')
+        reader = PcadBackPlaneReader('/dev/null')
         self.assertEqual(
             reader.parse_netlist_dict(
                 {
