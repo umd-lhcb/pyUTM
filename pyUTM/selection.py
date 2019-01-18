@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Jan 18, 2019 at 04:11 PM -0500
+# Last Change: Fri Jan 18, 2019 at 04:19 PM -0500
 
 from __future__ import annotations
 
@@ -157,7 +157,8 @@ class RuleNet(Rule):
             if self.debug_node is None:
                 return self.process(node)
             elif node == self.debug_node:
-                print('Specified node is being handled by: {}'.format(
+                print('Node {} is being handled by: {}'.format(
+                    self.node_to_str(self.debug_node),
                     self.__name__)
                 )
             else:
