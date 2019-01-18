@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Jan 18, 2019 at 06:54 AM -0500
+# Last Change: Fri Jan 18, 2019 at 09:46 AM -0500
 
 import openpyxl
 import re
@@ -180,12 +180,30 @@ class NestedListReader(object):
 
 
 class PcadReader(NestedListReader):
-    pass
-
-
-class PcadNetsReader(NestedListReader):
     def read(self):
-        return self.parse_netlist_dict(self.readnets())
+        pass
+
+    # Zishuo's original implementation, with some omissions.
+    def readnets(self):
+        all_nets_dict = {}
+
+        # First, keep only items that are netlists
+        nets = filter(lambda i: isinstance(i, list) and i[0] == 'net',
+                      super().read())
+        for net in nets:
+            net_name = net[1].strip('\"')
+            # NOTE: unlike Zishuo's original implementation, this list will not
+            # be sorted
+            all_nets_dict[net_name] = []
+
+            for node in \
+                    filter(lambda i: isinstance(i, list) and i[0] == 'node',
+                           net):
+                all_nets_dict[net_name].append(
+                    tuple(map(lambda i: i.strip('\"'), node[1:3]))
+                )
+
+        return all_nets_dict
 
     def parse_netlist_dict(self, all_nets_dict):
         net_nodes_dict = {}
@@ -234,28 +252,6 @@ class PcadNetsReader(NestedListReader):
 
         return net_nodes_dict
 
-    # Zishuo's original implementation, with some omissions.
-    def readnets(self):
-        all_nets_dict = {}
-
-        # First, keep only items that are netlists
-        nets = filter(lambda i: isinstance(i, list) and i[0] == 'net',
-                      super().read())
-        for net in nets:
-            net_name = net[1].strip('\"')
-            # NOTE: unlike Zishuo's original implementation, this list will not
-            # be sorted
-            all_nets_dict[net_name] = []
-
-            for node in \
-                    filter(lambda i: isinstance(i, list) and i[0] == 'node',
-                           net):
-                all_nets_dict[net_name].append(
-                    tuple(map(lambda i: i.strip('\"'), node[1:3]))
-                )
-
-        return all_nets_dict
-
     @staticmethod
     def net_node_gen(dcb_spec, pt_spec, datatype=NetNode):
         try:
@@ -273,6 +269,11 @@ class PcadNetsReader(NestedListReader):
     @staticmethod
     def find_node_match_regex(nodes_list, regex):
         return list(filter(lambda x: regex.search(x[0]), nodes_list))
+
+
+class PcadNetsReader(NestedListReader):
+    def read(self):
+        return self.parse_netlist_dict(self.readnets())
 
 
 class PcadNetsReaderCached(PcadReader):
