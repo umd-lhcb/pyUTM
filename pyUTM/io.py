@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Jan 18, 2019 at 02:37 PM -0500
+# Last Change: Fri Jan 18, 2019 at 03:07 PM -0500
 
 import openpyxl
 import re
@@ -191,20 +191,14 @@ class PcadReader(NestedListReader):
                                 expr)
 
         if nets:
-            expr_nets = filter(lambda i: isinstance(i, list) and
-                               i[0] == 'net',
-                               expr)
+            expr_nets = self.parse_nets(
+                filter(lambda i: isinstance(i, list) and i[0] == 'net', expr))
 
         return (expr_comps, expr_nets)
 
-
-class PcadBackPlaneReader(PcadReader):
-    def read(self):
-        _, expr_nets = super().read(comps=False)
-        return self.parse_netlist_dict(self.parse_nets(expr_nets))
-
     # Zishuo's original implementation, with some omissions.
-    def parse_nets(self, nets):
+    @staticmethod
+    def parse_nets(nets):
         all_nets_dict = {}
 
         for net in nets:
@@ -221,6 +215,12 @@ class PcadBackPlaneReader(PcadReader):
                 )
 
         return all_nets_dict
+
+
+class PcadBackPlaneReader(PcadReader):
+    def read(self):
+        _, expr_nets = super().read(comps=False)
+        return self.parse_netlist_dict(expr_nets)
 
     def parse_netlist_dict(self, all_nets_dict):
         net_nodes_dict = {}
@@ -294,7 +294,7 @@ class PcadBackPlaneReaderCached(PcadBackPlaneReader):
         super().__init__(*args)
 
         self.read = self.mem.cache(super().read)
-        self.parse_nets = self.mem.cache(super().parse_nets)
+        self.parse_netlist_dict = self.mem.cache(super().parse_netlist_dict)
 
 
 ############
