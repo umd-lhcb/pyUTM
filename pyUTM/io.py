@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Thu Jan 17, 2019 at 02:37 PM -0500
+# Last Change: Fri Jan 18, 2019 at 06:54 AM -0500
 
 import openpyxl
 import re
@@ -180,6 +180,10 @@ class NestedListReader(object):
 
 
 class PcadReader(NestedListReader):
+    pass
+
+
+class PcadNetsReader(NestedListReader):
     def read(self):
         return self.parse_netlist_dict(self.readnets())
 
@@ -271,7 +275,7 @@ class PcadReader(NestedListReader):
         return list(filter(lambda x: regex.search(x[0]), nodes_list))
 
 
-class PcadReaderCached(PcadReader):
+class PcadNetsReaderCached(PcadReader):
     def __init__(self, cache_dir, *args):
         self.mem = Memory(cache_dir)
         super().__init__(*args)
