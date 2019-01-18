@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Jan 18, 2019 at 03:07 PM -0500
+# Last Change: Fri Jan 18, 2019 at 03:25 PM -0500
 
 import openpyxl
 import re
@@ -220,7 +220,7 @@ class PcadReader(NestedListReader):
 class PcadBackPlaneReader(PcadReader):
     def read(self):
         _, expr_nets = super().read(comps=False)
-        return self.parse_netlist_dict(expr_nets)
+        return (self.parse_netlist_dict(expr_nets), expr_nets)
 
     def parse_netlist_dict(self, all_nets_dict):
         net_nodes_dict = {}
