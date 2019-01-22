@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Jan 18, 2019 at 04:19 PM -0500
+# Last Change: Tue Jan 22, 2019 at 01:16 PM -0500
 
 from __future__ import annotations
 
@@ -155,14 +155,17 @@ class RuleNet(Rule):
     def filter(self, node):
         if self.match(node):
             if self.debug_node is None:
-                return self.process(node)
+                pass
             elif node == self.debug_node:
-                print('Node {} is being handled by: {}'.format(
-                    self.node_to_str(self.debug_node),
-                    self.__name__)
+                self.debug_msg(
+                    'Node {} is being handled by: {}'.format(
+                        self.node_to_str(self.debug_node),
+                        self.__class__.__name__)
                 )
             else:
-                return self.process(node)
+                pass
+
+            return self.process(node)
 
     def process(self, node):
         return False  # This is just a sane default value
@@ -181,6 +184,10 @@ class RuleNet(Rule):
             s += ', '
 
         return s[:-2]
+
+    @staticmethod
+    def debug_msg(msg):
+        print(msg)
 
     @staticmethod
     def node_data_properties(node):
