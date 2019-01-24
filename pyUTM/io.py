@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Jan 18, 2019 at 03:25 PM -0500
+# Last Change: Thu Jan 24, 2019 at 02:37 AM -0500
 
 import openpyxl
 import re
@@ -11,6 +11,7 @@ from pyparsing import nestedExpr
 from tco import with_continuations  # Make Python do tail recursion elimination
 from joblib import Memory  # For persistent cache
 from itertools import zip_longest
+from collections import defaultdict
 
 from .datatype import range, ColNum, NetNode, GenericNetNode, ExcelCell
 from .common import flatten
@@ -180,7 +181,8 @@ class NestedListReader(object):
 
 
 class PcadReader(NestedListReader):
-    def read(self, comps=True, nets=True):
+    def read(self, comps=True, nets=True,
+             hoppable=['RN']):
         expr = super().read()
         expr_comps = []
         expr_nets = []
@@ -192,27 +194,47 @@ class PcadReader(NestedListReader):
 
         if nets:
             expr_nets = self.parse_nets(
-                filter(lambda i: isinstance(i, list) and i[0] == 'net', expr))
+                filter(lambda i: isinstance(i, list) and i[0] == 'net', expr),
+                hoppable
+            )
 
         return (expr_comps, expr_nets)
 
-    # Zishuo's original implementation, with some omissions.
+    # Heavily-modified Zishuo's implementation.
     @staticmethod
-    def parse_nets(nets):
+    def parse_nets(nets, hoppable=None):
         all_nets_dict = {}
+        hoppable_nets_dict = defaultdict(list)
 
+        # Rearrange netlists into dictionaries.
         for net in nets:
             net_name = net[1].strip('\"')
-            # NOTE: unlike Zishuo's original implementation, this list will not
-            # be sorted
             all_nets_dict[net_name] = []
 
             for node in \
                     filter(lambda i: isinstance(i, list) and i[0] == 'node',
                            net):
-                all_nets_dict[net_name].append(
-                    tuple(map(lambda i: i.strip('\"'), node[1:3]))
-                )
+                component, pin = map(lambda i: i.strip('\"'), node[1:3])
+
+                # Now check if the connector is a hoppable one.
+                if True in map(lambda x: component.startswith(x), hoppable):
+                    hoppable_nets_dict[component].append(net)
+
+                all_nets_dict[net_name].append((component, pin))
+
+        # Now make sure all hopped nets are identical
+        for component in hoppable_nets_dict.keys():
+            nets_unique = list(set(hoppable_nets_dict[component]))
+            net_head, net_tail = (nets_unique[0], nets_unique[1:])
+
+            # Combine all tail net nodes to head net
+            for tail in net_tail:
+                all_nets_dict[net_head].update(all_nets_dict[tail])
+
+            # Now make sure all nets that are connected by this component are
+            # identical.
+            for tail in net_tail:
+                all_nets_dict[tail] = all_nets_dict[net_head]
 
         return all_nets_dict
 
