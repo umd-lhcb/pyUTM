@@ -1,19 +1,16 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Thu Jan 24, 2019 at 02:37 AM -0500
+# Last Change: Thu Jan 24, 2019 at 02:39 AM -0500
 
 import openpyxl
 import re
 import yaml
 
 from pyparsing import nestedExpr
-from tco import with_continuations  # Make Python do tail recursion elimination
-from joblib import Memory  # For persistent cache
-from itertools import zip_longest
 from collections import defaultdict
 
-from .datatype import range, ColNum, NetNode, GenericNetNode, ExcelCell
+from .datatype import range, ColNum, ExcelCell
 from .common import flatten
 
 
@@ -160,18 +157,6 @@ class XLReader(object):
 # For Pcad netlist #
 ####################
 
-@with_continuations()
-def make_combinations(src, dest=[], self=None):
-    if len(src) == 1:
-        return dest
-
-    else:
-        head = src[0]
-        for i in src[1:]:
-            dest.append((head, i))
-        return self(src[1:], dest)
-
-
 class NestedListReader(object):
     def __init__(self, filename):
         self.filename = filename
@@ -237,86 +222,6 @@ class PcadReader(NestedListReader):
                 all_nets_dict[tail] = all_nets_dict[net_head]
 
         return all_nets_dict
-
-
-class PcadBackPlaneReader(PcadReader):
-    def read(self):
-        _, expr_nets = super().read(comps=False)
-        return (self.parse_netlist_dict(expr_nets), expr_nets)
-
-    def parse_netlist_dict(self, all_nets_dict):
-        net_nodes_dict = {}
-
-        for netname in all_nets_dict.keys():
-            net = all_nets_dict[netname]
-
-            dcb_nodes = self.find_node_match_regex(net, re.compile(r'^JD\d+'))
-            pt_nodes = self.find_node_match_regex(net, re.compile(r'^JP\d+'))
-            other_nodes = list(
-                set(net) - set(dcb_nodes) - set(pt_nodes)
-            )
-
-            # First, handle DCB-PT connections
-            if dcb_nodes and pt_nodes:
-                for d, p in zip_longest(dcb_nodes, pt_nodes):
-                    net_nodes_dict[self.net_node_gen(d, p)] = {
-                        'NETNAME': netname,
-                        'ATTR': None
-                    }
-
-            # Now deal with DCB-DCB connections, with recursion
-            if dcb_nodes:
-                dcb_combo = make_combinations(dcb_nodes)
-                for d1, d2 in dcb_combo:
-                    net_nodes_dict[self.net_node_gen(
-                        d1, d2, datatype=GenericNetNode)] = {
-                        'NETNAME': netname,
-                        'ATTR': None
-                    }
-
-            # Now if we do have other components...
-            if other_nodes and dcb_nodes:
-                for d in dcb_nodes:
-                    net_nodes_dict[self.net_node_gen(d, None)] = {
-                        'NETNAME': netname,
-                        'ATTR': None
-                    }
-
-            if other_nodes and pt_nodes:
-                for p in pt_nodes:
-                    net_nodes_dict[self.net_node_gen(None, p)] = {
-                        'NETNAME': netname,
-                        'ATTR': None
-                    }
-
-        return net_nodes_dict
-
-    @staticmethod
-    def net_node_gen(dcb_spec, pt_spec, datatype=NetNode):
-        try:
-            dcb, dcb_pin = dcb_spec
-        except Exception:
-            dcb = dcb_pin = None
-
-        try:
-            pt, pt_pin = pt_spec
-        except Exception:
-            pt = pt_pin = None
-
-        return datatype(dcb, dcb_pin, pt, pt_pin)
-
-    @staticmethod
-    def find_node_match_regex(nodes_list, regex):
-        return list(filter(lambda x: regex.search(x[0]), nodes_list))
-
-
-class PcadBackPlaneReaderCached(PcadBackPlaneReader):
-    def __init__(self, cache_dir, *args):
-        self.mem = Memory(cache_dir)
-        super().__init__(*args)
-
-        self.read = self.mem.cache(super().read)
-        self.parse_netlist_dict = self.mem.cache(super().parse_netlist_dict)
 
 
 ############
