@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Jan 18, 2019 at 02:38 PM -0500
+# Last Change: Thu Jan 24, 2019 at 05:14 PM -0500
 
 import unittest
-import re
 # from math import factorial
 
 import sys
@@ -12,8 +11,7 @@ sys.path.insert(0, '..')
 
 from pyUTM.io import csv_line
 from pyUTM.io import parse_cell_range
-from pyUTM.io import PcadBackPlaneReader
-from pyUTM.io import make_combinations
+from pyUTM.io import PcadReader
 from pyUTM.datatype import NetNode
 
 
@@ -56,51 +54,36 @@ class ParseCellRangeTester(unittest.TestCase):
         self.assertEqual(final_row, 345)
 
 
-class PcadBackPlaneReaderTester(unittest.TestCase):
-    def test_net_node_gen(self):
-        self.assertEqual(PcadBackPlaneReader.net_node_gen(None, None),
-                         NetNode(None, None, None, None))
-        self.assertEqual(PcadBackPlaneReader.net_node_gen(('JD1', '1'), None),
-                         NetNode('JD1', '1', None, None))
-        self.assertEqual(PcadBackPlaneReader.net_node_gen(None, ('JP1', '1')),
-                         NetNode(None, None, 'JP1', '1'))
-        self.assertEqual(PcadBackPlaneReader.net_node_gen(('JD1', '2'), ('JP1', '1')),
-                         NetNode('JD1', '2', 'JP1', '1'))
-
-    def test_find_node_match_regex(self):
+class PcadReaderTester(unittest.TestCase):
+    def test_convert_key_to_item(self):
+        ref_by_netname = {
+            'Net1': ['R1', 'R2'],
+            'Net2': ['R1'],
+            'Net3': ['R2']
+        }
+        ref_by_component = {
+            'R1': ['Net1', 'Net2'],
+            'R2': ['Net1', 'Net3']
+        }
         self.assertEqual(
-            PcadBackPlaneReader.find_node_match_regex(
-                [('JP1', 1), ('JP2', 1), ('JPL1', 1), ('JP11', 0), ('JD1', 1)],
-                re.compile(r'^JP\d+')),
-            [('JP1', 1), ('JP2', 1), ('JP11', 0)]
+            PcadReader.convert_key_to_item(ref_by_netname), ref_by_component
+        )
+        self.assertEqual(
+            PcadReader.convert_key_to_item(ref_by_component), ref_by_netname
         )
 
-    def test_parse_netlist_dict_dcb_pt(self):
-        reader = PcadBackPlaneReader('/dev/null')
+    def test_inter_nets_connector(self):
+        ref_by_netname = {
+            'Net1': ['R1', 'R2'],
+            'Net2': ['R1'],
+            'Net3': ['R2']
+        }
+        ref_by_component = PcadReader.convert_key_to_item(ref_by_netname)
         self.assertEqual(
-            reader.parse_netlist_dict(
-                {
-                    'JD4_JP0_DC5_ELK_CH9_N':
-                    [('JD4', 'E7'), ('JP0', 'A2')]
-                }
-            ),
-            {
-                NetNode('JD4', 'E7', 'JP0', 'A2'):
-                {'NETNAME': 'JD4_JP0_DC5_ELK_CH9_N', 'ATTR': None}
-            }
+            PcadReader.inter_nets_connector('Net1',
+                                            ref_by_netname, ref_by_component),
+            ['Net1', 'Net2']
         )
-
-    def test_recursive_combination_base(self):
-        self.assertEqual(make_combinations([1]), [])
-
-    # FIXME: Too bad, with TCO, these unit test breaks.
-    # def test_recursive_combination_sample(self):
-        # self.assertEqual(make_combinations([1, 2, 3]), [(1, 2), (1, 3), (2, 3)])
-
-    # def test_recursive_combination_recursion_limit(self):
-        # cap = 1000
-        # result = make_combinations([i for i in range(1, cap+1)])
-        # self.assertTrue(len(result) == factorial(cap))
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Thu Jan 24, 2019 at 11:10 AM -0500
+# Last Change: Thu Jan 24, 2019 at 05:14 PM -0500
 
 import openpyxl
 import re
@@ -222,6 +222,38 @@ class PcadReader(NestedListReader):
                 all_nets_dict[tail] = all_nets_dict[net_head]
 
         return all_nets_dict
+
+    def inter_nets_connector(cls,
+                             netname,
+                             ref_by_netname, ref_by_component,
+                             connected_nets=[],
+                             num_of_recursion=0, max_num_of_recursion=10):
+        if num_of_recursion > max_num_of_recursion:
+            raise ValueError(
+                'Cannot form a closed loop within {}. Giving up.'.format(
+                    max_num_of_recursion
+                ))
+
+        if netname in connected_nets:  # End of recursion.
+            return connected_nets
+        else:
+            connected_nets.append(netname)
+
+        for component in ref_by_netname[netname]:
+            for netname_others in ref_by_component[component]:
+                if netname_others != netname:
+                    cls.inter_nets_connector(netname_others,
+                                             ref_by_netname, ref_by_component,
+                                             connected_nets,
+                                             num_of_recursion+1)
+
+    @staticmethod
+    def convert_key_to_item(d):
+        converted = defaultdict(list)
+        for k in d.keys():
+            for i in d[k]:
+                converted[i].append(k)
+        return converted
 
 
 ############
