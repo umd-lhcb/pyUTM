@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Thu Jan 24, 2019 at 02:39 AM -0500
+# Last Change: Thu Jan 24, 2019 at 11:10 AM -0500
 
 import openpyxl
 import re
@@ -210,7 +210,7 @@ class PcadReader(NestedListReader):
         # Now make sure all hopped nets are identical
         for component in hoppable_nets_dict.keys():
             nets_unique = list(set(hoppable_nets_dict[component]))
-            net_head, net_tail = (nets_unique[0], nets_unique[1:])
+            net_head, net_tail = nets_unique[0], nets_unique[1:]
 
             # Combine all tail net nodes to head net
             for tail in net_tail:
