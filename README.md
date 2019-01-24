@@ -6,7 +6,5 @@ Python library for Pcad netlist parsing and mapping generation.
 Python: >= 3.7 (this is a hard requirement)
 openpyxl: >= 2.5.3
 pyparsing
-tco
-joblib
 pyyaml
 ```
