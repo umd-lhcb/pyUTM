@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Jan 25, 2019 at 07:32 AM -0500
+# Last Change: Fri Jan 25, 2019 at 04:20 PM -0500
 
 import openpyxl
 import re
@@ -167,7 +167,7 @@ class NestedListReader(object):
 
 class PcadReader(NestedListReader):
     def read(self, comps=True, nets=True,
-             hoppable=['RN']):
+             hoppable=['R', 'C', 'NT']):
         expr = super().read()
         expr_comps = []
         expr_nets = []
@@ -186,10 +186,10 @@ class PcadReader(NestedListReader):
         return (expr_comps, expr_nets)
 
     # Heavily-modified Zishuo's implementation.
-    @staticmethod
-    def parse_nets(nets, hoppable=None):
+    @classmethod
+    def parse_nets(cls, nets, hoppable):
         all_nets_dict = {}
-        hoppable_nets_dict = defaultdict(list)
+        hoppable_ref_by_component = defaultdict(list)
 
         # Rearrange netlists into dictionaries.
         for net in nets:
@@ -202,26 +202,33 @@ class PcadReader(NestedListReader):
                 component, pin = map(lambda i: i.strip('\"'), node[1:3])
 
                 # Now check if the connector is a hoppable one.
-                if True in map(lambda x: component.startswith(x), hoppable):
-                    hoppable_nets_dict[component].append(net)
+                if True in map(lambda x: bool(re.search(x), component),
+                               hoppable):
+                    hoppable_ref_by_component[component].append(net)
 
                 all_nets_dict[net_name].append((component, pin))
 
-        # Now make sure all hopped nets are identical
-        for component in hoppable_nets_dict.keys():
-            nets_unique = list(set(hoppable_nets_dict[component]))
-            net_head, net_tail = nets_unique[0], nets_unique[1:]
+        # Group nets into equivalency groups
+        all_equivalent_net_groups = \
+            cls.group_hoppable_nets(hoppable_ref_by_component)
 
-            # Combine all tail net nodes to head net
-            for tail in net_tail:
-                all_nets_dict[net_head].update(all_nets_dict[tail])
+        # Finally, make sure all hopped nets are identical
+        return cls.make_connected_nets_consistent_again(
+            all_nets_dict, all_equivalent_net_groups)
 
-            # Now make sure all nets that are connected by this component are
-            # identical.
-            for tail in net_tail:
-                all_nets_dict[tail] = all_nets_dict[net_head]
+    @classmethod
+    def group_hoppable_nets(cls, ref_by_component):
+        ref_by_netname = cls.convert_key_to_item(ref_by_component)
+        all_equivalent_net_groups = []
 
-        return all_nets_dict
+        for netname in ref_by_netname.keys:
+            all_equivalent_net_groups.append(
+                cls.inter_nets_connector(
+                    netname,
+                    ref_by_netname, ref_by_component)
+            )
+
+        return list(map(list, set(map(frozenset, all_equivalent_net_groups))))
 
     # FIXME: This is an ugly implementation that relies on side effects.
     @classmethod
@@ -269,6 +276,23 @@ class PcadReader(NestedListReader):
                 converted[i].append(k)
         return converted
 
+    @staticmethod
+    def make_connected_nets_consistent_again(all_nets_dict,
+                                             all_equivalent_net_groups):
+        for netgroup in all_equivalent_net_groups:
+            net_head, net_tail = netgroup[0], netgroup[1:]
+
+            # Combine all tail net nodes to head net
+            for tail in net_tail:
+                all_nets_dict[net_head].update(all_nets_dict[tail])
+
+            # Now make sure all nets that are connected by this component are
+            # identical.
+            for tail in net_tail:
+                all_nets_dict[tail] = all_nets_dict[net_head]
+
+        return all_nets_dict
+
 
 ############
 # For YAML #
@@ -288,3 +312,12 @@ class YamlReader(object):
                 raw[k] = sorted(raw[k], key=sortby)
 
         return raw
+
+
+###############
+# For NetNode #
+###############
+
+class NetNodeReader(object):
+    def read(self, node_list, fro='_FRO_'):
+        pass
