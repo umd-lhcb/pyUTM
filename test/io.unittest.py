@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Thu Jan 24, 2019 at 05:14 PM -0500
+# Last Change: Fri Jan 25, 2019 at 07:09 AM -0500
 
 import unittest
 # from math import factorial
@@ -80,9 +80,22 @@ class PcadReaderTester(unittest.TestCase):
         }
         ref_by_component = PcadReader.convert_key_to_item(ref_by_netname)
         self.assertEqual(
-            PcadReader.inter_nets_connector('Net1',
-                                            ref_by_netname, ref_by_component),
-            ['Net1', 'Net2']
+            PcadReader.inter_nets_connector(
+                'Net1',
+                ref_by_netname, ref_by_component),
+            ['Net1', 'Net2', 'Net3']
+        )
+        self.assertEqual(
+            PcadReader.inter_nets_connector(
+                'Net2',
+                ref_by_netname, ref_by_component),
+            ['Net1', 'Net2', 'Net3']
+        )
+        self.assertEqual(
+            PcadReader.inter_nets_connector(
+                'Net3',
+                ref_by_netname, ref_by_component),
+            ['Net1', 'Net2', 'Net3']
         )
 
 

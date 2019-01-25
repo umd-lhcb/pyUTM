@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Thu Jan 24, 2019 at 05:14 PM -0500
+# Last Change: Fri Jan 25, 2019 at 07:08 AM -0500
 
 import openpyxl
 import re
@@ -223,10 +223,11 @@ class PcadReader(NestedListReader):
 
         return all_nets_dict
 
+    @classmethod
     def inter_nets_connector(cls,
                              netname,
                              ref_by_netname, ref_by_component,
-                             connected_nets=[],
+                             connected_nets=[], hopped_components=[],
                              num_of_recursion=0, max_num_of_recursion=10):
         if num_of_recursion > max_num_of_recursion:
             raise ValueError(
@@ -234,18 +235,26 @@ class PcadReader(NestedListReader):
                     max_num_of_recursion
                 ))
 
-        if netname in connected_nets:  # End of recursion.
-            return connected_nets
-        else:
+        if netname not in connected_nets:
             connected_nets.append(netname)
 
-        for component in ref_by_netname[netname]:
-            for netname_others in ref_by_component[component]:
-                if netname_others != netname:
-                    cls.inter_nets_connector(netname_others,
-                                             ref_by_netname, ref_by_component,
-                                             connected_nets,
-                                             num_of_recursion+1)
+        unhopped_components = [i for i in ref_by_netname[netname]
+                               if i not in hopped_components]
+
+        if unhopped_components == []:
+            return connected_nets
+        else:
+            for component in unhopped_components:
+                unsurveyed_net = [i for i in ref_by_component[component]
+                                  if i != netname]
+                for net in unsurveyed_net:
+                    cls.inter_nets_connector(
+                        net,
+                        ref_by_netname, ref_by_component,
+                        connected_nets, [component]+hopped_components,
+                        num_of_recursion+1)
+
+            return connected_nets
 
     @staticmethod
     def convert_key_to_item(d):
