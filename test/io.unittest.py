@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Jan 25, 2019 at 07:33 AM -0500
+# Last Change: Fri Jan 25, 2019 at 08:55 AM -0500
 
 import unittest
 # from math import factorial
@@ -139,6 +139,72 @@ class PcadReaderTester(unittest.TestCase):
                 'Net3',
                 ref_by_netname, ref_by_component),
             ['Net3']
+        )
+
+    def test_inter_nets_connector_case3(self):
+        ref_by_netname = {
+            'Net1': ['M'],
+            'Net2': ['M'],
+            'Net3': ['M']
+        }
+        ref_by_component = PcadReader.convert_key_to_item(ref_by_netname)
+        self.assertEqual(
+            PcadReader.inter_nets_connector(
+                'Net1',
+                ref_by_netname, ref_by_component),
+            ['Net1', 'Net2', 'Net3']
+        )
+        self.assertEqual(
+            PcadReader.inter_nets_connector(
+                'Net2',
+                ref_by_netname, ref_by_component),
+            ['Net2', 'Net1', 'Net3']
+        )
+        self.assertEqual(
+            PcadReader.inter_nets_connector(
+                'Net3',
+                ref_by_netname, ref_by_component),
+            ['Net3', 'Net1', 'Net2']
+        )
+
+    def test_inter_nets_connector_case4(self):
+        ref_by_netname = {
+            'Net1': ['R1', 'R2'],
+            'Net2': ['R1'],
+            'Net3': ['R2'],
+            'Net4': ['R3'],
+            'Net5': ['R3']
+        }
+        ref_by_component = PcadReader.convert_key_to_item(ref_by_netname)
+        self.assertEqual(
+            PcadReader.inter_nets_connector(
+                'Net1',
+                ref_by_netname, ref_by_component),
+            ['Net1', 'Net2', 'Net3']
+        )
+        self.assertEqual(
+            PcadReader.inter_nets_connector(
+                'Net2',
+                ref_by_netname, ref_by_component),
+            ['Net2', 'Net1', 'Net3']
+        )
+        self.assertEqual(
+            PcadReader.inter_nets_connector(
+                'Net3',
+                ref_by_netname, ref_by_component),
+            ['Net3', 'Net1', 'Net2']
+        )
+        self.assertEqual(
+            PcadReader.inter_nets_connector(
+                'Net4',
+                ref_by_netname, ref_by_component),
+            ['Net4', 'Net5']
+        )
+        self.assertEqual(
+            PcadReader.inter_nets_connector(
+                'Net5',
+                ref_by_netname, ref_by_component),
+            ['Net5', 'Net4']
         )
 
 
