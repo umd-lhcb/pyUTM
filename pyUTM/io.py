@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Thu Jan 31, 2019 at 02:09 PM -0500
+# Last Change: Thu Jan 31, 2019 at 03:50 PM -0500
 
 import openpyxl
 import re
@@ -320,6 +320,26 @@ class YamlReader(object):
 # For NetNode #
 ###############
 
-class NetNodeReader(object):
-    def read(self, node_list, fro='_FRO_'):
-        pass
+def netnode_to_netlist(all_nodes_dict):
+    all_nets_dict = defaultdict(list)
+
+    for node in all_nodes_dict:
+        real_netname = ''
+        prop = all_nodes_dict[node]
+        netname, attr = prop['NETNAME'], prop['ATTR']
+
+        if netname is None:
+            real_netname += attr
+        elif attr is not None:
+            net_head, net_tail = netname.split('_', 1)
+            real_netname += (net_head + attr + net_tail)
+        else:
+            real_netname += netname
+
+        if node.PT is not None:
+            all_nets_dict[real_netname].append(node.PT)
+
+        if node.DCB is not None:
+            all_nets_dict[real_netname].append(node.DCB)
+
+    return all_nets_dict
