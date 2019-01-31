@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Thu Jan 31, 2019 at 02:09 PM -0500
+# Last Change: Thu Jan 31, 2019 at 04:33 PM -0500
 
 import unittest
 # from math import factorial
@@ -12,6 +12,7 @@ sys.path.insert(0, '..')
 from pyUTM.io import csv_line
 from pyUTM.io import parse_cell_range
 from pyUTM.io import PcadReader
+from pyUTM.io import netnode_to_netlist
 from pyUTM.datatype import NetNode
 
 
@@ -211,6 +212,43 @@ class PcadReaderTester(unittest.TestCase):
         reader = PcadReader('./comet_daughter.sample.net')
         result = reader.read(hoppable=[r'^W\d+'])
         self.assertEqual(result['NetD1_1'], result['DIFF_TERM_STV'])
+
+
+class NetNodeToNetListTest(unittest.TestCase):
+    def test_dcb_pt_node(self):
+        nodes_dict = {
+            NetNode('JD1', 'A1', 'JP1', 'A1'):
+            {'NETNAME': 'JD1_JP1_unreal', 'ATTR': None}
+        }
+        self.assertEqual(
+            dict(netnode_to_netlist(nodes_dict)),
+            {'JD1_JP1_unreal': ['JD1', 'JP1']}
+        )
+
+    def test_dcb_none_node(self):
+        nodes_dict = {
+            NetNode('JD1', 'A1'):
+            {'NETNAME': 'JD1_JPL1_unreal', 'ATTR': None}
+        }
+        self.assertEqual(
+            dict(netnode_to_netlist(nodes_dict)),
+            {'JD1_JPL1_unreal': ['JD1']}
+        )
+
+    def test_multiple_nodes(self):
+        nodes_dict = {
+            NetNode('JD1', 'A1'):
+            {'NETNAME': 'JD1_JPL1_unreal', 'ATTR': None},
+            NetNode('JD2', 'A2', 'JP1', 'A1'):
+            {'NETNAME': 'JD2_JP1_unreal', 'ATTR': None},
+        }
+        self.assertEqual(
+            dict(netnode_to_netlist(nodes_dict)),
+            {
+                'JD1_JPL1_unreal': ['JD1'],
+                'JD2_JP1_unreal': ['JD2', 'JP1'],
+            }
+        )
 
 
 if __name__ == '__main__':
