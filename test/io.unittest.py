@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Jan 25, 2019 at 08:55 AM -0500
+# Last Change: Fri Jan 25, 2019 at 05:11 PM -0500
 
 import unittest
 # from math import factorial
@@ -206,6 +206,11 @@ class PcadReaderTester(unittest.TestCase):
                 ref_by_netname, ref_by_component),
             ['Net5', 'Net4']
         )
+
+    def test_net_hop_with_real_netlist(self):
+        reader = PcadReader('./comet_daughter.sample.net')
+        result = reader.read(hoppable=[r'^W\d+'])
+        self.assertEqual(result['NetD1_1'] == result['DIFF_TERM_STV'])
 
 
 if __name__ == '__main__':

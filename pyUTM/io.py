@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Jan 25, 2019 at 04:20 PM -0500
+# Last Change: Thu Jan 31, 2019 at 12:26 PM -0500
 
 import openpyxl
 import re
@@ -166,28 +166,34 @@ class NestedListReader(object):
 
 
 class PcadReader(NestedListReader):
-    def read(self, comps=True, nets=True,
-             hoppable=['R', 'C', 'NT']):
+    def read(self, hoppable=[r'^R\d+', r'^C\d+', r'^NT\d+']):
         expr = super().read()
-        expr_comps = []
-        expr_nets = []
 
-        if comps:
-            expr_comps = filter(lambda i: isinstance(i, list) and
-                                i[0] == 'compInst',
-                                expr)
+        parsed_nets = self.parse_nets(
+            filter(lambda i: isinstance(i, list) and i[0] == 'net', expr)
+        )
 
-        if nets:
-            expr_nets = self.parse_nets(
-                filter(lambda i: isinstance(i, list) and i[0] == 'net', expr),
-                hoppable
-            )
-
-        return (expr_comps, expr_nets)
+        return parsed_nets
 
     # Heavily-modified Zishuo's implementation.
     @classmethod
-    def parse_nets(cls, nets, hoppable):
+    def parse_nets(cls, nets):
+        all_nets_dict = {}
+
+        for net in nets:
+            netname = net[1].strip('\"')
+            all_nets_dict[netname] = []
+
+            for node in \
+                    filter(lambda i: isinstance(i, list) and i[0] == 'node',
+                           net):
+                component, pin = map(lambda x: x.strip('\"'), node[1:3])
+                all_nets_dict[netname].append(component)
+
+        return all_nets_dict
+
+    @classmethod
+    def parse_nets_sss(cls, nets, hoppable):
         all_nets_dict = {}
         hoppable_ref_by_component = defaultdict(list)
 
@@ -202,7 +208,7 @@ class PcadReader(NestedListReader):
                 component, pin = map(lambda i: i.strip('\"'), node[1:3])
 
                 # Now check if the connector is a hoppable one.
-                if True in map(lambda x: bool(re.search(x), component),
+                if True in map(lambda x: bool(re.search(x, component)),
                                hoppable):
                     hoppable_ref_by_component[component].append(net)
 
