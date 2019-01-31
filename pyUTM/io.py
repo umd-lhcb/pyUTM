@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Thu Jan 31, 2019 at 12:26 PM -0500
+# Last Change: Thu Jan 31, 2019 at 02:09 PM -0500
 
 import openpyxl
 import re
@@ -169,57 +169,23 @@ class PcadReader(NestedListReader):
     def read(self, hoppable=[r'^R\d+', r'^C\d+', r'^NT\d+']):
         expr = super().read()
 
-        parsed_nets = self.parse_nets(
+        all_nets_dict = self.parse_nets(
             filter(lambda i: isinstance(i, list) and i[0] == 'net', expr)
         )
 
-        return parsed_nets
-
-    # Heavily-modified Zishuo's implementation.
-    @classmethod
-    def parse_nets(cls, nets):
-        all_nets_dict = {}
-
-        for net in nets:
-            netname = net[1].strip('\"')
-            all_nets_dict[netname] = []
-
-            for node in \
-                    filter(lambda i: isinstance(i, list) and i[0] == 'node',
-                           net):
-                component, pin = map(lambda x: x.strip('\"'), node[1:3])
-                all_nets_dict[netname].append(component)
-
-        return all_nets_dict
-
-    @classmethod
-    def parse_nets_sss(cls, nets, hoppable):
-        all_nets_dict = {}
-        hoppable_ref_by_component = defaultdict(list)
-
-        # Rearrange netlists into dictionaries.
-        for net in nets:
-            net_name = net[1].strip('\"')
-            all_nets_dict[net_name] = []
-
-            for node in \
-                    filter(lambda i: isinstance(i, list) and i[0] == 'node',
-                           net):
-                component, pin = map(lambda i: i.strip('\"'), node[1:3])
-
-                # Now check if the connector is a hoppable one.
-                if True in map(lambda x: bool(re.search(x, component)),
-                               hoppable):
-                    hoppable_ref_by_component[component].append(net)
-
-                all_nets_dict[net_name].append((component, pin))
+        # NOTE: Here I'm doing double looping that can be combined in a single
+        #       loop, but I still decide to separate them for readability.
+        # Find all hoppable components and the nets they are in
+        hoppable_ref_by_component = self.generate_hoppable_ref_by_component(
+            all_nets_dict, hoppable
+        )
 
         # Group nets into equivalency groups
         all_equivalent_net_groups = \
-            cls.group_hoppable_nets(hoppable_ref_by_component)
+            self.group_hoppable_nets(hoppable_ref_by_component)
 
         # Finally, make sure all hopped nets are identical
-        return cls.make_connected_nets_consistent_again(
+        return self.make_connected_nets_consistent_again(
             all_nets_dict, all_equivalent_net_groups)
 
     @classmethod
@@ -227,7 +193,7 @@ class PcadReader(NestedListReader):
         ref_by_netname = cls.convert_key_to_item(ref_by_component)
         all_equivalent_net_groups = []
 
-        for netname in ref_by_netname.keys:
+        for netname in ref_by_netname.keys():
             all_equivalent_net_groups.append(
                 cls.inter_nets_connector(
                     netname,
@@ -274,6 +240,36 @@ class PcadReader(NestedListReader):
 
             return connected_nets
 
+    # Heavily-modified Zishuo's implementation.
+    @staticmethod
+    def parse_nets(nets):
+        all_nets_dict = {}
+
+        for net in nets:
+            netname = net[1].strip('\"')
+            all_nets_dict[netname] = []
+
+            for node in \
+                    filter(lambda i: isinstance(i, list) and i[0] == 'node',
+                           net):
+                component, pin = map(lambda x: x.strip('\"'), node[1:3])
+                all_nets_dict[netname].append(component)
+
+        return all_nets_dict
+
+    @staticmethod
+    def generate_hoppable_ref_by_component(all_nets_dict, hoppable):
+        hoppable_ref_by_component = defaultdict(list)
+
+        for netname in all_nets_dict.keys():
+            for component in all_nets_dict[netname]:
+                # Now check if the connector is a hoppable one.
+                if True in map(lambda x: bool(re.search(x, component)),
+                               hoppable):
+                    hoppable_ref_by_component[component].append(netname)
+
+        return hoppable_ref_by_component
+
     @staticmethod
     def convert_key_to_item(d):
         converted = defaultdict(list)
@@ -290,7 +286,7 @@ class PcadReader(NestedListReader):
 
             # Combine all tail net nodes to head net
             for tail in net_tail:
-                all_nets_dict[net_head].update(all_nets_dict[tail])
+                all_nets_dict[net_head] + all_nets_dict[tail]
 
             # Now make sure all nets that are connected by this component are
             # identical.
