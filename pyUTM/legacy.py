@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Feb 01, 2019 at 07:13 AM -0500
+# Last Change: Fri Feb 01, 2019 at 07:45 AM -0500
 
 import re
 
@@ -12,7 +12,7 @@ from tco import with_continuations  # Make Python do tail recursion elimination
 from .datatype import NetNode, GenericNetNode
 from .selection import RulePD
 from .common import split_netname
-from .io import PcadReader
+from .io import PcadNaiveReader
 
 
 ##############
@@ -270,7 +270,7 @@ def make_combinations(src, dest=[], self=None):
         return self(src[1:], dest)
 
 
-class PcadBackPlaneReader(PcadReader):
+class PcadBackPlaneReader(PcadNaiveReader):
     def read(self):
         nets = super().read()
         return (self.parse_netlist_dict(nets), nets)

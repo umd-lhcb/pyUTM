@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Feb 01, 2019 at 07:24 AM -0500
+# Last Change: Fri Feb 01, 2019 at 07:41 AM -0500
 
 import openpyxl
 import re
@@ -165,13 +165,29 @@ class NestedListReader(object):
         return nestedExpr().parseFile(self.filename).asList()[0]
 
 
+class PcadNaiveReader(NestedListReader):
+    # Heavily-modified Zishuo's implementation.
+    def read(self):
+        nets = super().read()
+        all_nets_dict = {}
+
+        for net in filter(lambda i: isinstance(i, list) and i[0] == 'net',
+                          nets):
+            netname = net[1].strip('\"')
+            all_nets_dict[netname] = []
+
+            for node in \
+                    filter(lambda i: isinstance(i, list) and i[0] == 'node',
+                           net):
+                component, pin = map(lambda x: x.strip('\"'), node[1:3])
+                all_nets_dict[netname].append(component)
+
+        return all_nets_dict
+
+
 class PcadReader(NestedListReader):
     def read(self, hoppable=[r'^R\d+', r'^C\d+', r'^NT\d+']):
-        expr = super().read()
-
-        all_nets_dict = self.parse_nets(
-            filter(lambda i: isinstance(i, list) and i[0] == 'net', expr)
-        )
+        all_nets_dict = super().read()
 
         # NOTE: Here I'm doing double looping that can be combined in a single
         #       loop, but I still decide to separate them for readability.
@@ -239,23 +255,6 @@ class PcadReader(NestedListReader):
                         num_of_recursion+1)
 
             return connected_nets
-
-    # Heavily-modified Zishuo's implementation.
-    @staticmethod
-    def parse_nets(nets):
-        all_nets_dict = {}
-
-        for net in nets:
-            netname = net[1].strip('\"')
-            all_nets_dict[netname] = []
-
-            for node in \
-                    filter(lambda i: isinstance(i, list) and i[0] == 'node',
-                           net):
-                component, pin = map(lambda x: x.strip('\"'), node[1:3])
-                all_nets_dict[netname].append(component)
-
-        return all_nets_dict
 
     @staticmethod
     def generate_hoppable_ref_by_component(all_nets_dict, hoppable):
