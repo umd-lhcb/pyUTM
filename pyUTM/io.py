@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Feb 01, 2019 at 07:16 AM -0500
+# Last Change: Fri Feb 01, 2019 at 07:24 AM -0500
 
 import openpyxl
 import re
@@ -215,8 +215,8 @@ class PcadReader(NestedListReader):
 
         if num_of_recursion > max_num_of_recursion:
             raise ValueError(
-                'Cannot exhaust hoppable components within {}. Giving up.'.format(
-                    max_num_of_recursion
+                'Cannot exhaust hoppable components within {}. Giving up. Was working on nets {}, with hopped_components {}.'.format(
+                    max_num_of_recursion, connected_nets, hopped_components
                 ))
 
         if netname not in connected_nets:
