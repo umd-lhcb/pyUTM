@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Thu Jan 31, 2019 at 04:18 PM -0500
+# Last Change: Fri Feb 01, 2019 at 07:16 AM -0500
 
 import openpyxl
 import re
@@ -208,7 +208,7 @@ class PcadReader(NestedListReader):
                              netname,
                              ref_by_netname, ref_by_component,
                              connected_nets=[], hopped_components=[],
-                             num_of_recursion=0, max_num_of_recursion=10):
+                             num_of_recursion=0, max_num_of_recursion=100):
         if num_of_recursion == 0:
             connected_nets = []
             hopped_components = []
