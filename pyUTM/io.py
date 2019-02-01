@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Feb 01, 2019 at 07:41 AM -0500
+# Last Change: Fri Feb 01, 2019 at 09:41 AM -0500
 
 import openpyxl
 import re
@@ -185,7 +185,7 @@ class PcadNaiveReader(NestedListReader):
         return all_nets_dict
 
 
-class PcadReader(NestedListReader):
+class PcadReader(PcadNaiveReader):
     def read(self, hoppable=[r'^R\d+', r'^C\d+', r'^NT\d+']):
         all_nets_dict = super().read()
 
