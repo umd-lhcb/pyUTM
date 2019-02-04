@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Feb 01, 2019 at 09:41 AM -0500
+# Last Change: Mon Feb 04, 2019 at 04:30 PM -0500
 
 import openpyxl
 import re
@@ -195,66 +195,40 @@ class PcadReader(PcadNaiveReader):
         hoppable_ref_by_component = self.generate_hoppable_ref_by_component(
             all_nets_dict, hoppable
         )
+        hoppable_ref_by_netname = self.convert_key_to_item(
+            hoppable_ref_by_component)
 
-        # Group nets into equivalency groups
-        all_equivalent_net_groups = \
-            self.group_hoppable_nets(hoppable_ref_by_component)
+        # Now do the actual net-hopping
+        hopped_nets_dict = self.hopping_nets(
+            hoppable_ref_by_netname, hoppable_ref_by_component
+        )
 
-        # Finally, make sure all hopped nets are identical
-        return self.make_connected_nets_consistent_again(
-            all_nets_dict, all_equivalent_net_groups)
+        all_nets_dict.update(hopped_nets_dict)
+        return all_nets_dict
 
-    @classmethod
-    def group_hoppable_nets(cls, ref_by_component):
-        ref_by_netname = cls.convert_key_to_item(ref_by_component)
-        all_equivalent_net_groups = []
+    # NOTE: This is an iterative approach, not a recursively. Furthermore,
+    #       assuming a component can be hopped once (i.e. a hoppable component
+    #       only has 2 legs).
+    @staticmethod
+    def hopping_nets(ref_by_netname, ref_by_component):
+        hopped_nets_dict = dict()
 
-        for netname in ref_by_netname.keys():
-            all_equivalent_net_groups.append(
-                cls.inter_nets_connector(
-                    netname,
-                    ref_by_netname, ref_by_component)
-            )
+        # Figure out the connection map
+        for net, components in ref_by_netname.items():
+            components_after_hopping = []
+            for component in components:
+                connected_nets = ref_by_component[component]
+                for n in connected_nets:
+                    components_after_hopping += ref_by_netname[n]
+            hopped_nets_dict[net] = components_after_hopping
 
-        return list(map(list, set(map(frozenset, all_equivalent_net_groups))))
+        # Now sort component list for each net, and make sure no duplicated
+        # component is contained
+        for net, components in hopped_nets_dict.items():
+            components = list(set(sorted(components)))
+            hopped_nets_dict[net] = components
 
-    # FIXME: This is an ugly implementation that relies on side effects.
-    @classmethod
-    def inter_nets_connector(cls,
-                             netname,
-                             ref_by_netname, ref_by_component,
-                             connected_nets=[], hopped_components=[],
-                             num_of_recursion=0, max_num_of_recursion=100):
-        if num_of_recursion == 0:
-            connected_nets = []
-            hopped_components = []
-
-        if num_of_recursion > max_num_of_recursion:
-            raise ValueError(
-                'Cannot exhaust hoppable components within {}. Giving up. Was working on nets {}, with hopped_components {}.'.format(
-                    max_num_of_recursion, connected_nets, hopped_components
-                ))
-
-        if netname not in connected_nets:
-            connected_nets.append(netname)
-
-        if hopped_components == ref_by_netname[netname]:
-            return connected_nets
-
-        else:
-            unhopped_components = [i for i in ref_by_netname[netname]
-                                   if i not in hopped_components]
-            for component in unhopped_components:
-                unsurveyed_net = [i for i in ref_by_component[component]
-                                  if i != netname]
-                for net in unsurveyed_net:
-                    cls.inter_nets_connector(
-                        net,
-                        ref_by_netname, ref_by_component,
-                        connected_nets, [component]+hopped_components,
-                        num_of_recursion+1)
-
-            return connected_nets
+        return hopped_nets_dict
 
     @staticmethod
     def generate_hoppable_ref_by_component(all_nets_dict, hoppable):
@@ -276,23 +250,6 @@ class PcadReader(PcadNaiveReader):
             for i in d[k]:
                 converted[i].append(k)
         return converted
-
-    @staticmethod
-    def make_connected_nets_consistent_again(all_nets_dict,
-                                             all_equivalent_net_groups):
-        for netgroup in all_equivalent_net_groups:
-            net_head, net_tail = netgroup[0], netgroup[1:]
-
-            # Combine all tail net nodes to head net
-            for tail in net_tail:
-                all_nets_dict[net_head] + all_nets_dict[tail]
-
-            # Now make sure all nets that are connected by this component are
-            # identical.
-            for tail in net_tail:
-                all_nets_dict[tail] = all_nets_dict[net_head]
-
-        return all_nets_dict
 
 
 ############
