@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Mon Feb 04, 2019 at 04:30 PM -0500
+# Last Change: Mon Feb 04, 2019 at 04:39 PM -0500
 
 import openpyxl
 import re
@@ -225,7 +225,7 @@ class PcadReader(PcadNaiveReader):
         # Now sort component list for each net, and make sure no duplicated
         # component is contained
         for net, components in hopped_nets_dict.items():
-            components = list(set(sorted(components)))
+            components = sorted(list(set(components)))
             hopped_nets_dict[net] = components
 
         return hopped_nets_dict
