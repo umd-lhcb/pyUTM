@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Tue Jan 22, 2019 at 01:16 PM -0500
+# Last Change: Tue Feb 05, 2019 at 11:26 AM -0500
 
 from __future__ import annotations
 
@@ -202,6 +202,8 @@ class SelectorNet(Selector):
         for node in self.dataset.keys():
             for rule in self.rules:
                 result = rule.filter(node)
+                # NOTE: 'False' -> This entry has been checked by a matching
+                #       rule and no error is detected.
                 if result is False:
                     break
 
