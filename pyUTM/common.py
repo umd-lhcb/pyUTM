@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Thu Dec 20, 2018 at 12:16 PM -0500
+# Last Change: Wed Feb 06, 2019 at 04:00 PM -0500
 
 from collections import defaultdict
 
@@ -72,6 +72,188 @@ jp_swapping_mirror = {
     'JP10': 'JP8',
     'JP11': 'JP9',
 }
+
+all_pepis = {
+    # For true-type PEPIs
+    'Magnet-Top-C': [
+        {'stv_bp': 'X-0', 'stv_ut': 'UTbX_1C', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 't'},
+        {'stv_bp': 'S-0', 'stv_ut': 'UTbV_1C', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 't'},
+        {'stv_bp': 'X-1', 'stv_ut': 'UTbX_2C', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 't'},
+        {'stv_bp': 'S-1', 'stv_ut': 'UTbV_2C', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 't'},
+        {'stv_bp': 'X-2', 'stv_ut': 'UTbX_3C', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 't'},
+        {'stv_bp': 'S-2', 'stv_ut': 'UTbV_3C', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 't'},
+
+        {'stv_bp': 'X-0', 'stv_ut': 'UTbX_4C', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 't'},
+        {'stv_bp': 'S-0', 'stv_ut': 'UTbV_4C', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 't'},
+        {'stv_bp': 'X-1', 'stv_ut': 'UTbX_5C', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 't'},
+        {'stv_bp': 'S-1', 'stv_ut': 'UTbV_5C', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 't'},
+        {'stv_bp': 'X-2', 'stv_ut': 'UTbX_6C', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 't'},
+        {'stv_bp': 'S-2', 'stv_ut': 'UTbV_6C', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 't'},
+
+        {'stv_bp': 'X-0', 'stv_ut': 'UTbX_7C', 'bp_var': 'middle', 'bp_abg': 'g', 'bp_type': 't'},
+        {'stv_bp': 'S-0', 'stv_ut': 'UTbV_7C', 'bp_var': 'middle', 'bp_abg': 'g', 'bp_type': 't'},
+        {'stv_bp': 'X-1', 'stv_ut': 'UTbX_8C', 'bp_var': 'middle', 'bp_abg': 'g', 'bp_type': 't'},
+        {'stv_bp': 'S-1', 'stv_ut': 'UTbV_8C', 'bp_var': 'middle', 'bp_abg': 'g', 'bp_type': 't'},
+        {'stv_bp': 'X-2', 'stv_ut': 'UTbX_9C', 'bp_var': 'middle', 'bp_abg': 'g', 'bp_type': 't'},
+        {'stv_bp': 'S-2', 'stv_ut': 'UTbV_9C', 'bp_var': 'middle', 'bp_abg': 'g', 'bp_type': 't'},
+    ],
+    'Magnet-Bottom-A': [
+        {'stv_bp': 'X-0', 'stv_ut': 'UTbX_1A', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 't'},
+        {'stv_bp': 'S-0', 'stv_ut': 'UTbV_1A', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 't'},
+        {'stv_bp': 'X-1', 'stv_ut': 'UTbX_2A', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 't'},
+        {'stv_bp': 'S-1', 'stv_ut': 'UTbV_2A', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 't'},
+        {'stv_bp': 'X-2', 'stv_ut': 'UTbX_3A', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 't'},
+        {'stv_bp': 'S-2', 'stv_ut': 'UTbV_3A', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 't'},
+
+        {'stv_bp': 'X-0', 'stv_ut': 'UTbX_4A', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 't'},
+        {'stv_bp': 'S-0', 'stv_ut': 'UTbV_4A', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 't'},
+        {'stv_bp': 'X-1', 'stv_ut': 'UTbX_5A', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 't'},
+        {'stv_bp': 'S-1', 'stv_ut': 'UTbV_5A', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 't'},
+        {'stv_bp': 'X-2', 'stv_ut': 'UTbX_6A', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 't'},
+        {'stv_bp': 'S-2', 'stv_ut': 'UTbV_6A', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 't'},
+
+        {'stv_bp': 'X-0', 'stv_ut': 'UTbX_7A', 'bp_var': 'middle', 'bp_abg': 'g', 'bp_type': 't'},
+        {'stv_bp': 'S-0', 'stv_ut': 'UTbV_7A', 'bp_var': 'middle', 'bp_abg': 'g', 'bp_type': 't'},
+        {'stv_bp': 'X-1', 'stv_ut': 'UTbX_8A', 'bp_var': 'middle', 'bp_abg': 'g', 'bp_type': 't'},
+        {'stv_bp': 'S-1', 'stv_ut': 'UTbV_8A', 'bp_var': 'middle', 'bp_abg': 'g', 'bp_type': 't'},
+        {'stv_bp': 'X-2', 'stv_ut': 'UTbX_9A', 'bp_var': 'middle', 'bp_abg': 'g', 'bp_type': 't'},
+        {'stv_bp': 'S-2', 'stv_ut': 'UTbV_9A', 'bp_var': 'middle', 'bp_abg': 'g', 'bp_type': 't'},
+    ],
+    'IP-Top-A': [
+        {'stv_bp': 'X-0', 'stv_ut': 'UTaX_1A', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 't'},
+        {'stv_bp': 'S-0', 'stv_ut': 'UTaU_1A', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 't'},
+        {'stv_bp': 'X-1', 'stv_ut': 'UTaX_2A', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 't'},
+        {'stv_bp': 'S-1', 'stv_ut': 'UTaU_2A', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 't'},
+        {'stv_bp': 'X-2', 'stv_ut': 'UTaX_3A', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 't'},
+        {'stv_bp': 'S-2', 'stv_ut': 'UTaU_3A', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 't'},
+
+        {'stv_bp': 'X-0', 'stv_ut': 'UTaX_4A', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 't'},
+        {'stv_bp': 'S-0', 'stv_ut': 'UTaU_4A', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 't'},
+        {'stv_bp': 'X-1', 'stv_ut': 'UTaX_5A', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 't'},
+        {'stv_bp': 'S-1', 'stv_ut': 'UTaU_5A', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 't'},
+        {'stv_bp': 'X-2', 'stv_ut': 'UTaX_6A', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 't'},
+        {'stv_bp': 'S-2', 'stv_ut': 'UTaU_6A', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 't'},
+
+        {'stv_bp': 'X-0', 'stv_ut': 'UTaX_7A', 'bp_var': 'outer', 'bp_abg': 'g', 'bp_type': 't'},
+        {'stv_bp': 'S-0', 'stv_ut': 'UTaU_7A', 'bp_var': 'outer', 'bp_abg': 'g', 'bp_type': 't'},
+        {'stv_bp': 'X-1', 'stv_ut': 'UTaX_8A', 'bp_var': 'outer', 'bp_abg': 'g', 'bp_type': 't'},
+        {'stv_bp': 'S-1', 'stv_ut': 'UTaU_8A', 'bp_var': 'outer', 'bp_abg': 'g', 'bp_type': 't'},
+        {'stv_bp': 'X-2', 'stv_ut': 'UTaX_9A', 'bp_var': 'outer', 'bp_abg': 'g', 'bp_type': 't'},
+        {'stv_bp': 'S-2', 'stv_ut': 'UTaU_9A', 'bp_var': 'outer', 'bp_abg': 'g', 'bp_type': 't'},
+    ],
+    'IP-Bottom-C': [
+        {'stv_bp': 'X-0', 'stv_ut': 'UTaX_1C', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 't'},
+        {'stv_bp': 'S-0', 'stv_ut': 'UTaU_1C', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 't'},
+        {'stv_bp': 'X-1', 'stv_ut': 'UTaX_2C', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 't'},
+        {'stv_bp': 'S-1', 'stv_ut': 'UTaU_2C', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 't'},
+        {'stv_bp': 'X-2', 'stv_ut': 'UTaX_3C', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 't'},
+        {'stv_bp': 'S-2', 'stv_ut': 'UTaU_3C', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 't'},
+
+        {'stv_bp': 'X-0', 'stv_ut': 'UTaX_4C', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 't'},
+        {'stv_bp': 'S-0', 'stv_ut': 'UTaU_4C', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 't'},
+        {'stv_bp': 'X-1', 'stv_ut': 'UTaX_5C', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 't'},
+        {'stv_bp': 'S-1', 'stv_ut': 'UTaU_5C', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 't'},
+        {'stv_bp': 'X-2', 'stv_ut': 'UTaX_6C', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 't'},
+        {'stv_bp': 'S-2', 'stv_ut': 'UTaU_6C', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 't'},
+
+        {'stv_bp': 'X-0', 'stv_ut': 'UTaX_7C', 'bp_var': 'outer', 'bp_abg': 'g', 'bp_type': 't'},
+        {'stv_bp': 'S-0', 'stv_ut': 'UTaU_7C', 'bp_var': 'outer', 'bp_abg': 'g', 'bp_type': 't'},
+        {'stv_bp': 'X-1', 'stv_ut': 'UTaX_8C', 'bp_var': 'outer', 'bp_abg': 'g', 'bp_type': 't'},
+        {'stv_bp': 'S-1', 'stv_ut': 'UTaU_8C', 'bp_var': 'outer', 'bp_abg': 'g', 'bp_type': 't'},
+        {'stv_bp': 'X-2', 'stv_ut': 'UTaX_9C', 'bp_var': 'outer', 'bp_abg': 'g', 'bp_type': 't'},
+        {'stv_bp': 'S-2', 'stv_ut': 'UTaU_9C', 'bp_var': 'outer', 'bp_abg': 'g', 'bp_type': 't'}
+    ],
+    # Now for mirror-tye PEPIs
+    'Magnet-Bottom-C': [
+        {'stv_bp': 'X-0', 'stv_ut': 'UTbX_1C', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 'm'},
+        {'stv_bp': 'S-0', 'stv_ut': 'UTbV_1C', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 'm'},
+        {'stv_bp': 'X-1', 'stv_ut': 'UTbX_2C', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 'm'},
+        {'stv_bp': 'S-1', 'stv_ut': 'UTbV_2C', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 'm'},
+        {'stv_bp': 'X-2', 'stv_ut': 'UTbX_3C', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 'm'},
+        {'stv_bp': 'S-2', 'stv_ut': 'UTbV_3C', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 'm'},
+
+        {'stv_bp': 'X-0', 'stv_ut': 'UTbX_4C', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 'm'},
+        {'stv_bp': 'S-0', 'stv_ut': 'UTbV_4C', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 'm'},
+        {'stv_bp': 'X-1', 'stv_ut': 'UTbX_5C', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 'm'},
+        {'stv_bp': 'S-1', 'stv_ut': 'UTbV_5C', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 'm'},
+        {'stv_bp': 'X-2', 'stv_ut': 'UTbX_6C', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 'm'},
+        {'stv_bp': 'S-2', 'stv_ut': 'UTbV_6C', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 'm'},
+
+        {'stv_bp': 'X-0', 'stv_ut': 'UTbX_7C', 'bp_var': 'middle', 'bp_abg': 'g', 'bp_type': 'm'},
+        {'stv_bp': 'S-0', 'stv_ut': 'UTbV_7C', 'bp_var': 'middle', 'bp_abg': 'g', 'bp_type': 'm'},
+        {'stv_bp': 'X-1', 'stv_ut': 'UTbX_8C', 'bp_var': 'middle', 'bp_abg': 'g', 'bp_type': 'm'},
+        {'stv_bp': 'S-1', 'stv_ut': 'UTbV_8C', 'bp_var': 'middle', 'bp_abg': 'g', 'bp_type': 'm'},
+        {'stv_bp': 'X-2', 'stv_ut': 'UTbX_9C', 'bp_var': 'middle', 'bp_abg': 'g', 'bp_type': 'm'},
+        {'stv_bp': 'S-2', 'stv_ut': 'UTbV_9C', 'bp_var': 'middle', 'bp_abg': 'g', 'bp_type': 'm'},
+    ],
+    'Magnet-Top-A': [
+        {'stv_bp': 'X-0', 'stv_ut': 'UTbX_1A', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 'm'},
+        {'stv_bp': 'S-0', 'stv_ut': 'UTbV_1A', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 'm'},
+        {'stv_bp': 'X-1', 'stv_ut': 'UTbX_2A', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 'm'},
+        {'stv_bp': 'S-1', 'stv_ut': 'UTbV_2A', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 'm'},
+        {'stv_bp': 'X-2', 'stv_ut': 'UTbX_3A', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 'm'},
+        {'stv_bp': 'S-2', 'stv_ut': 'UTbV_3A', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 'm'},
+
+        {'stv_bp': 'X-0', 'stv_ut': 'UTbX_4A', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 'm'},
+        {'stv_bp': 'S-0', 'stv_ut': 'UTbV_4A', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 'm'},
+        {'stv_bp': 'X-1', 'stv_ut': 'UTbX_5A', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 'm'},
+        {'stv_bp': 'S-1', 'stv_ut': 'UTbV_5A', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 'm'},
+        {'stv_bp': 'X-2', 'stv_ut': 'UTbX_6A', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 'm'},
+        {'stv_bp': 'S-2', 'stv_ut': 'UTbV_6A', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 'm'},
+
+        {'stv_bp': 'X-0', 'stv_ut': 'UTbX_7A', 'bp_var': 'middle', 'bp_abg': 'g', 'bp_type': 'm'},
+        {'stv_bp': 'S-0', 'stv_ut': 'UTbV_7A', 'bp_var': 'middle', 'bp_abg': 'g', 'bp_type': 'm'},
+        {'stv_bp': 'X-1', 'stv_ut': 'UTbX_8A', 'bp_var': 'middle', 'bp_abg': 'g', 'bp_type': 'm'},
+        {'stv_bp': 'S-1', 'stv_ut': 'UTbV_8A', 'bp_var': 'middle', 'bp_abg': 'g', 'bp_type': 'm'},
+        {'stv_bp': 'X-2', 'stv_ut': 'UTbX_9A', 'bp_var': 'middle', 'bp_abg': 'g', 'bp_type': 'm'},
+        {'stv_bp': 'S-2', 'stv_ut': 'UTbV_9A', 'bp_var': 'middle', 'bp_abg': 'g', 'bp_type': 'm'},
+    ],
+    'IP-Bottom-A': [
+        {'stv_bp': 'X-0', 'stv_ut': 'UTaX_1A', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 'm'},
+        {'stv_bp': 'S-0', 'stv_ut': 'UTaU_1A', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 'm'},
+        {'stv_bp': 'X-1', 'stv_ut': 'UTaX_2A', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 'm'},
+        {'stv_bp': 'S-1', 'stv_ut': 'UTaU_2A', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 'm'},
+        {'stv_bp': 'X-2', 'stv_ut': 'UTaX_3A', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 'm'},
+        {'stv_bp': 'S-2', 'stv_ut': 'UTaU_3A', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 'm'},
+
+        {'stv_bp': 'X-0', 'stv_ut': 'UTaX_4A', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 'm'},
+        {'stv_bp': 'S-0', 'stv_ut': 'UTaU_4A', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 'm'},
+        {'stv_bp': 'X-1', 'stv_ut': 'UTaX_5A', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 'm'},
+        {'stv_bp': 'S-1', 'stv_ut': 'UTaU_5A', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 'm'},
+        {'stv_bp': 'X-2', 'stv_ut': 'UTaX_6A', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 'm'},
+        {'stv_bp': 'S-2', 'stv_ut': 'UTaU_6A', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 'm'},
+
+        {'stv_bp': 'X-0', 'stv_ut': 'UTaX_7A', 'bp_var': 'outer', 'bp_abg': 'g', 'bp_type': 'm'},
+        {'stv_bp': 'S-0', 'stv_ut': 'UTaU_7A', 'bp_var': 'outer', 'bp_abg': 'g', 'bp_type': 'm'},
+        {'stv_bp': 'X-1', 'stv_ut': 'UTaX_8A', 'bp_var': 'outer', 'bp_abg': 'g', 'bp_type': 'm'},
+        {'stv_bp': 'S-1', 'stv_ut': 'UTaU_8A', 'bp_var': 'outer', 'bp_abg': 'g', 'bp_type': 'm'},
+        {'stv_bp': 'X-2', 'stv_ut': 'UTaX_9A', 'bp_var': 'outer', 'bp_abg': 'g', 'bp_type': 'm'},
+        {'stv_bp': 'S-2', 'stv_ut': 'UTaU_9A', 'bp_var': 'outer', 'bp_abg': 'g', 'bp_type': 'm'},
+    ],
+    'IP-Top-C': [
+        {'stv_bp': 'X-0', 'stv_ut': 'UTaX_1C', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 'm'},
+        {'stv_bp': 'S-0', 'stv_ut': 'UTaU_1C', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 'm'},
+        {'stv_bp': 'X-1', 'stv_ut': 'UTaX_2C', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 'm'},
+        {'stv_bp': 'S-1', 'stv_ut': 'UTaU_2C', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 'm'},
+        {'stv_bp': 'X-2', 'stv_ut': 'UTaX_3C', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 'm'},
+        {'stv_bp': 'S-2', 'stv_ut': 'UTaU_3C', 'bp_var': 'inner', 'bp_abg': 'a', 'bp_type': 'm'},
+
+        {'stv_bp': 'X-0', 'stv_ut': 'UTaX_4C', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 'm'},
+        {'stv_bp': 'S-0', 'stv_ut': 'UTaU_4C', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 'm'},
+        {'stv_bp': 'X-1', 'stv_ut': 'UTaX_5C', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 'm'},
+        {'stv_bp': 'S-1', 'stv_ut': 'UTaU_5C', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 'm'},
+        {'stv_bp': 'X-2', 'stv_ut': 'UTaX_6C', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 'm'},
+        {'stv_bp': 'S-2', 'stv_ut': 'UTaU_6C', 'bp_var': 'middle', 'bp_abg': 'b', 'bp_type': 'm'},
+
+        {'stv_bp': 'X-0', 'stv_ut': 'UTaX_7C', 'bp_var': 'outer', 'bp_abg': 'g', 'bp_type': 'm'},
+        {'stv_bp': 'S-0', 'stv_ut': 'UTaU_7C', 'bp_var': 'outer', 'bp_abg': 'g', 'bp_type': 'm'},
+        {'stv_bp': 'X-1', 'stv_ut': 'UTaX_8C', 'bp_var': 'outer', 'bp_abg': 'g', 'bp_type': 'm'},
+        {'stv_bp': 'S-1', 'stv_ut': 'UTaU_8C', 'bp_var': 'outer', 'bp_abg': 'g', 'bp_type': 'm'},
+        {'stv_bp': 'X-2', 'stv_ut': 'UTaX_9C', 'bp_var': 'outer', 'bp_abg': 'g', 'bp_type': 'm'},
+        {'stv_bp': 'S-2', 'stv_ut': 'UTaU_9C', 'bp_var': 'outer', 'bp_abg': 'g', 'bp_type': 'm'}
+    ]
+}
+
 
 #############################
 # For YAML/Excel conversion #
