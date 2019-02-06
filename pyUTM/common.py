@@ -41,6 +41,38 @@ jd_swapping_mirror = {
     'JD11': 'JD10'
 }
 
+# Table for translating Proto JP# to DataFlex identifier on any True/Mirror BP
+jp_flex_type_proto = {
+    'JP0': 'X-0-M',
+    'JP1': 'X-0-S',
+    'JP2': 'S-0-S',
+    'JP3': 'S-0-M',
+    'JP4': 'X-1-M',
+    'JP5': 'X-1-S',
+    'JP6': 'S-1-S',
+    'JP7': 'S-1-M',
+    'JP8': 'X-2-M',
+    'JP9': 'X-2-S',
+    'JP10': 'S-2-S',
+    'JP11': 'S-2-M',
+}
+
+# Table for translating JP# from Proto/True (right side) to Mirror (left side)
+jp_flex_type_proto = {
+    'JP0': 'JP2',
+    'JP1': 'JP3',
+    'JP2': 'JP0',
+    'JP3': 'JP1',
+    'JP4': 'JP6',
+    'JP5': 'JP7',
+    'JP6': 'JP4',
+    'JP7': 'JP5',
+    'JP8': 'JP10',
+    'JP9': 'JP11',
+    'JP10': 'JP8',
+    'JP11': 'JP9',
+}
+
 #############################
 # For YAML/Excel conversion #
 #############################
