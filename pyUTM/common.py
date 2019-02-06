@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Thu Dec 20, 2018 at 12:16 PM -0500
+# Last Change: Wed Feb 06, 2019 at 10:41 AM -0500
 
 from collections import defaultdict
 
@@ -22,6 +22,21 @@ jd_swapping_true = {
     'JD9': 'JD9',
     'JD10': 'JD10',
     'JD11': 'JD11'
+}
+
+jp_flex_type_proto = {
+    'JP0': 'X-0-M',
+    'JP1': 'X-0-S',
+    'JP2': 'S-0-S',
+    'JP3': 'S-0-M',
+    'JP4': 'X-1-M',
+    'JP5': 'X-1-S',
+    'JP6': 'S-1-S',
+    'JP7': 'S-1-M',
+    'JP8': 'X-2-M',
+    'JP9': 'X-2-S',
+    'JP10': 'S-2-S',
+    'JP11': 'S-2-M',
 }
 
 
