@@ -58,7 +58,7 @@ jp_flex_type_proto = {
 }
 
 # Table for translating JP# from Proto/True (right side) to Mirror (left side)
-jp_flex_type_proto = {
+jp_swapping_mirror = {
     'JP0': 'JP2',
     'JP1': 'JP3',
     'JP2': 'JP0',
