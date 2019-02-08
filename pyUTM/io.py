@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Thu Feb 07, 2019 at 09:06 PM -0500
+# Last Change: Fri Feb 08, 2019 at 12:48 AM -0500
 
 import openpyxl
 import re
@@ -188,41 +188,14 @@ class PcadNaiveReader(NestedListReader):
 
 
 class PcadReader(PcadNaiveReader):
-    def read(self, hoppable=[r'^R\d+', r'^C\d+', r'^NT\d+']):
+    def read(self, nethopper=None):
         all_nets_dict = super().read()
 
-        # NOTE: Here I'm doing double looping that can be combined in a single
-        #       loop, but I still decide to separate them for readability.
-        # Find all hoppable components and the nets they are in
-        hoppable_ref_by_component = self.generate_hoppable_ref_by_component(
-            all_nets_dict, hoppable
-        )
-        hoppable_ref_by_netname = self.convert_key_to_item(
-            hoppable_ref_by_component)
-
-        # Now do the actual net-hopping
-        hopped_nets_dict = self.hopping_nets(
-            hoppable_ref_by_netname, hoppable_ref_by_component
-        )
-
-        all_nets_dict.update(hopped_nets_dict)
         return all_nets_dict
 
-    # NOTE: This is an iterative approach, not a recursive one. Furthermore,
-    #       assuming a component can be hopped once (i.e. a hoppable component
-    #       only has 2 legs).
     @staticmethod
     def hopping_nets(ref_by_netname, ref_by_component):
         hopped_nets_dict = dict()
-
-        # Figure out the connection map
-        for net, components in ref_by_netname.items():
-            components_after_hopping = []
-            for component in components:
-                connected_nets = ref_by_component[component]
-                for n in connected_nets:
-                    components_after_hopping += ref_by_netname[n]
-            hopped_nets_dict[net] = components_after_hopping
 
         # Now sort component list for each net, and make sure no duplicated
         # component is contained
@@ -245,6 +218,23 @@ class PcadReader(PcadNaiveReader):
 
         return hoppable_ref_by_component
 
+    # NOTE: This is an iterative approach, not a recursive one. Furthermore,
+    #       assuming a component can be hopped once (i.e. a hoppable component
+    #       only has 2 legs).
+    @staticmethod
+    def find_equivalent_nets(ref_by_netname, ref_by_component):
+        equivalent_nets = []
+
+        for net, components in ref_by_netname.items():
+            net_group = {net, }
+            for component in components:
+                for hoppable_net in ref_by_component[component]:
+                    net_group.add(hoppable_net)
+            equivalent_nets.append(net_group)
+
+        # Now we need to remove duplicated groups in the equivalent_nets.
+        return [tuple(g) for g in set(map(frozenset, equivalent_nets))]
+
     @staticmethod
     def convert_key_to_item(d):
         converted = defaultdict(list)
@@ -252,6 +242,37 @@ class PcadReader(PcadNaiveReader):
             for i in d[k]:
                 converted[i].append(k)
         return converted
+
+
+class NetHopper(object):
+    def __init__(self, hoppable=[r'^R\d+', r'^C\d+', r'^NT\d+']):
+        self.hoppable = hoppable
+
+    def strip(self, d):
+        result = {}
+
+        for netname, components in d.items():
+            stripped = []
+            for c in map(lambda x: x[0], components):
+                if True in map(lambda x: bool(re.search(x, c)), self.hoppable):
+                    stripped.append(c)
+            result[netname] = stripped
+
+        return result
+
+    @staticmethod
+    def mc_current(avail_comps, comp_to_net):
+        return comp_to_net[avail_comps[0]]
+
+    @staticmethod
+    def diff(l1, l2):
+        left = set(l1) - set(l2)
+        right = set(l2) - set(l1)
+
+        if len(left) > len(right):
+            return list(left)
+        else:
+            return list(right)
 
 
 ############
