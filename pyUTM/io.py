@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Feb 08, 2019 at 01:07 AM -0500
+# Last Change: Fri Feb 08, 2019 at 01:12 PM -0500
 
 import openpyxl
 import re
@@ -242,32 +242,6 @@ class PcadReader(PcadNaiveReader):
             for i in d[k]:
                 converted[i].append(k)
         return converted
-
-
-class NetHopper(object):
-    def __init__(self, hoppable=[r'^R\d+', r'^C\d+', r'^NT\d+']):
-        self.hoppable = hoppable
-
-    def strip(self, d):
-        result = {}
-
-        for netname, components in d.items():
-            stripped = []
-            for c in map(lambda x: x[0], components):
-                if True in map(lambda x: bool(re.search(x, c)), self.hoppable):
-                    stripped.append(c)
-            result[netname] = stripped
-
-        return result
-
-    @staticmethod
-    def flow(avail_comps, comp_to_net):
-        comp = avail_comps[0]
-        return (comp, comp_to_net[comp])
-
-    @staticmethod
-    def diff(l1, l2):
-        return [i for i in l1 if i not in l2]
 
 
 ############
