@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Feb 08, 2019 at 12:51 AM -0500
+# Last Change: Fri Feb 08, 2019 at 01:07 AM -0500
 
 import openpyxl
 import re
@@ -262,7 +262,8 @@ class NetHopper(object):
 
     @staticmethod
     def flow(avail_comps, comp_to_net):
-        return comp_to_net[avail_comps[0]]
+        comp = avail_comps[0]
+        return (comp, comp_to_net[comp])
 
     @staticmethod
     def diff(l1, l2):
@@ -293,12 +294,12 @@ class YamlReader(object):
 # For NetNode #
 ###############
 
-def netnode_to_netlist(all_nodes_dict):
-    all_nets_dict = defaultdict(list)
+def netnode_to_netlist(nodes):
+    nets = defaultdict(list)
 
-    for node in all_nodes_dict:
+    for n in nodes.keys():
         real_netname = ''
-        prop = all_nodes_dict[node]
+        prop = nodes[n]
         netname, attr = prop['NETNAME'], prop['ATTR']
 
         if netname is None:
@@ -309,10 +310,10 @@ def netnode_to_netlist(all_nodes_dict):
         else:
             real_netname += netname
 
-        if node.DCB is not None:
-            all_nets_dict[real_netname].append((node.DCB, node.DCB_PIN))
+        if n.DCB is not None:
+            nets[real_netname].append((n.DCB, n.DCB_PIN))
 
-        if node.PT is not None:
-            all_nets_dict[real_netname].append((node.PT, node.PT_PIN))
+        if n.PT is not None:
+            nets[real_netname].append((n.PT, n.PT_PIN))
 
-    return all_nets_dict
+    return nets
