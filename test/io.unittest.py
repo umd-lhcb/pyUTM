@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Mon Feb 04, 2019 at 04:32 PM -0500
+# Last Change: Thu Feb 07, 2019 at 08:12 PM -0500
 
 import unittest
 # from math import factorial
@@ -176,7 +176,7 @@ class NetNodeToNetListTest(unittest.TestCase):
         }
         self.assertEqual(
             dict(netnode_to_netlist(nodes_dict)),
-            {'JD1_JP1_unreal': ['JD1', 'JP1']}
+            {'JD1_JP1_unreal': [('JD1', 'A1'), ('JP1', 'A1')]}
         )
 
     def test_dcb_none_node(self):
@@ -186,7 +186,7 @@ class NetNodeToNetListTest(unittest.TestCase):
         }
         self.assertEqual(
             dict(netnode_to_netlist(nodes_dict)),
-            {'JD1_JPL1_unreal': ['JD1']}
+            {'JD1_JPL1_unreal': [('JD1', 'A1')]}
         )
 
     def test_multiple_nodes(self):
@@ -199,8 +199,8 @@ class NetNodeToNetListTest(unittest.TestCase):
         self.assertEqual(
             dict(netnode_to_netlist(nodes_dict)),
             {
-                'JD1_JPL1_unreal': ['JD1'],
-                'JD2_JP1_unreal': ['JD2', 'JP1'],
+                'JD1_JPL1_unreal': [('JD1', 'A1')],
+                'JD2_JP1_unreal':  [('JD2', 'A2'), ('JP1', 'A1')],
             }
         )
 

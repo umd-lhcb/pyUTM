@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Mon Feb 04, 2019 at 04:39 PM -0500
+# Last Change: Thu Feb 07, 2019 at 08:11 PM -0500
 
 import openpyxl
 import re
@@ -293,9 +293,9 @@ def netnode_to_netlist(all_nodes_dict):
             real_netname += netname
 
         if node.DCB is not None:
-            all_nets_dict[real_netname].append(node.DCB)
+            all_nets_dict[real_netname].append((node.DCB, node.DCB_PIN))
 
         if node.PT is not None:
-            all_nets_dict[real_netname].append(node.PT)
+            all_nets_dict[real_netname].append((node.PT, node.PT_PIN))
 
     return all_nets_dict
