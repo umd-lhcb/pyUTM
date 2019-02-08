@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Feb 08, 2019 at 12:48 AM -0500
+# Last Change: Fri Feb 08, 2019 at 12:51 AM -0500
 
 import openpyxl
 import re
@@ -261,18 +261,12 @@ class NetHopper(object):
         return result
 
     @staticmethod
-    def mc_current(avail_comps, comp_to_net):
+    def flow(avail_comps, comp_to_net):
         return comp_to_net[avail_comps[0]]
 
     @staticmethod
     def diff(l1, l2):
-        left = set(l1) - set(l2)
-        right = set(l2) - set(l1)
-
-        if len(left) > len(right):
-            return list(left)
-        else:
-            return list(right)
+        return [i for i in l1 if i not in l2]
 
 
 ############

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Feb 08, 2019 at 12:47 AM -0500
+# Last Change: Fri Feb 08, 2019 at 12:52 AM -0500
 
 import unittest
 # from math import factorial
@@ -68,6 +68,18 @@ class NetHopperTester(unittest.TestCase):
                 'Net1': ['R1', 'C2'],
                 'Net2': ['R1', 'R2', 'NT3'],
             }
+        )
+
+    def test_diff_case1(self):
+        self.assertEqual(
+            NetHopper.diff(['R1', 'C2'], ['R2', 'C1']),
+            ['R1', 'C2']
+        )
+
+    def test_diff_case2(self):
+        self.assertEqual(
+            NetHopper.diff(['R1', 'C2'], ['C1', 'C2']),
+            ['R1']
         )
 
     # def test_convert_key_to_item_case1(self):
