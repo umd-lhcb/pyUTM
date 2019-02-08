@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Thu Feb 07, 2019 at 09:02 PM -0500
+# Last Change: Thu Feb 07, 2019 at 09:06 PM -0500
 
 import openpyxl
 import re
@@ -208,7 +208,7 @@ class PcadReader(PcadNaiveReader):
         all_nets_dict.update(hopped_nets_dict)
         return all_nets_dict
 
-    # NOTE: This is an iterative approach, not a recursively. Furthermore,
+    # NOTE: This is an iterative approach, not a recursive one. Furthermore,
     #       assuming a component can be hopped once (i.e. a hoppable component
     #       only has 2 legs).
     @staticmethod
