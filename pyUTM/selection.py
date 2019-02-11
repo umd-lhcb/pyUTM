@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Tue Feb 05, 2019 at 11:26 AM -0500
+# Last Change: Mon Feb 11, 2019 at 03:16 PM -0500
 
 from __future__ import annotations
 
@@ -55,11 +55,11 @@ class Selector(metaclass=abc.ABCMeta):
                  dataset: Union[list, dict],
                  rules: List[Rule],
                  nested: Optional[Selector] = None) -> None:
-            self.dataset = dataset
-            self.rules = rules
+        self.dataset = dataset
+        self.rules = rules
 
-            # We do allow nested selectors.
-            self.nested = nested
+        # We do allow nested selectors.
+        self.nested = nested
 
     @abc.abstractmethod
     def do(self, data: Optional[Union[list, dict]] = None) -> Union[list, dict]:
@@ -68,17 +68,59 @@ class Selector(metaclass=abc.ABCMeta):
         '''
 
 
+#####################################################################
+# Base rule class for both copy-paste-generation and error checking #
+#####################################################################
+
+class RuleBase(Rule):
+    debug_node = None
+
+    @classmethod
+    def node_to_str(cls, node):
+        attrs = cls.node_data_properties(node)
+
+        s = ''
+        for a in attrs:
+            s += (a + ': ')
+            if getattr(node, a) is not None:
+                s += getattr(node, a)
+            else:
+                s += 'None'
+            s += ', '
+
+        return s[:-2]
+
+    @staticmethod
+    def debug_msg(msg):
+        print(msg)
+
+    @staticmethod
+    def node_data_properties(node):
+        candidate = [attr for attr in dir(node) if not attr.startswith('_')]
+        return [attr for attr in candidate if attr not in ['count', 'index']]
+
+
 ###################################
 # Selection rules for PigTail/DCB #
 ###################################
 
-class RulePD(Rule):
+class RulePD(RuleBase):
     PT_PREFIX = 'JP'
     DCB_PREFIX = 'JD'
 
     def filter(self, data, connector):
         if self.match(data, connector):
-            return self.process(data, connector)
+            result = self.process(data, connector)
+
+            # For debugging
+            if self.debug_node is not None and self.debug_node == result[0]:
+                self.debug_msg(
+                    'Node {} is being handled by: {}'.format(
+                        self.node_to_str(self.debug_node),
+                        self.__class__.__name__)
+                )
+
+            return result
 
     @staticmethod
     def prop_gen(netname, note=None, attr=None):
@@ -144,7 +186,7 @@ class SelectorPD(Selector):
 # Selection rules for schematic checking #
 ##########################################
 
-class RuleNet(Rule):
+class RuleNet(RuleBase):
     def __init__(self, node_dict, node_list, reference):
         self.node_dict = node_dict
         self.node_list = node_list
@@ -169,30 +211,6 @@ class RuleNet(Rule):
 
     def process(self, node):
         return False  # This is just a sane default value
-
-    @classmethod
-    def node_to_str(cls, node):
-        attrs = cls.node_data_properties(node)
-
-        s = ''
-        for a in attrs:
-            s += (a + ': ')
-            if getattr(node, a) is not None:
-                s += getattr(node, a)
-            else:
-                s += 'None'
-            s += ', '
-
-        return s[:-2]
-
-    @staticmethod
-    def debug_msg(msg):
-        print(msg)
-
-    @staticmethod
-    def node_data_properties(node):
-        candidate = [attr for attr in dir(node) if not attr.startswith('_')]
-        return [attr for attr in candidate if attr not in ['count', 'index']]
 
 
 class SelectorNet(Selector):
