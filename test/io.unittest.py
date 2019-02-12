@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Tue Feb 12, 2019 at 01:21 AM -0500
+# Last Change: Tue Feb 12, 2019 at 01:59 PM -0500
 
 import unittest
 # from math import factorial
@@ -54,19 +54,6 @@ class ParseCellRangeTester(unittest.TestCase):
         self.assertEqual(str(final_col), 'CD')
         self.assertEqual(final_row, 345)
 
-
-    # def test_find_equivalent_nets_case2(self):
-        # ref_by_netname = {
-            # 'Net1': ['R1', 'R2'],
-            # 'Net2': ['R1'],
-            # 'Net3': ['R3'],
-            # 'Net4': ['R2', 'R3']
-        # }
-        # ref_by_component = PcadReader.convert_key_to_item(ref_by_netname)
-        # self.assertEqual(
-            # PcadReader.find_equivalent_nets(ref_by_netname, ref_by_component),
-            # [('Net1', 'Net2', 'Net3', 'Net4')]
-        # )
 
     # def test_net_hop_with_real_netlist(self):
         # reader = PcadReader('./comet_daughter.sample.net')
