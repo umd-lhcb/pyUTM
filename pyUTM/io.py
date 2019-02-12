@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Feb 08, 2019 at 01:12 PM -0500
+# Last Change: Tue Feb 12, 2019 at 01:17 AM -0500
 
 import openpyxl
 import re
@@ -217,31 +217,6 @@ class PcadReader(PcadNaiveReader):
                     hoppable_ref_by_component[component].append(netname)
 
         return hoppable_ref_by_component
-
-    # NOTE: This is an iterative approach, not a recursive one. Furthermore,
-    #       assuming a component can be hopped once (i.e. a hoppable component
-    #       only has 2 legs).
-    @staticmethod
-    def find_equivalent_nets(ref_by_netname, ref_by_component):
-        equivalent_nets = []
-
-        for net, components in ref_by_netname.items():
-            net_group = {net, }
-            for component in components:
-                for hoppable_net in ref_by_component[component]:
-                    net_group.add(hoppable_net)
-            equivalent_nets.append(net_group)
-
-        # Now we need to remove duplicated groups in the equivalent_nets.
-        return [tuple(g) for g in set(map(frozenset, equivalent_nets))]
-
-    @staticmethod
-    def convert_key_to_item(d):
-        converted = defaultdict(list)
-        for k in d.keys():
-            for i in d[k]:
-                converted[i].append(k)
-        return converted
 
 
 ############

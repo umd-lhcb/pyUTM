@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Feb 08, 2019 at 12:52 AM -0500
+# Last Change: Tue Feb 12, 2019 at 01:21 AM -0500
 
 import unittest
 # from math import factorial
@@ -11,7 +11,7 @@ sys.path.insert(0, '..')
 
 from pyUTM.io import csv_line
 from pyUTM.io import parse_cell_range
-from pyUTM.io import NetHopper, PcadReader
+from pyUTM.io import PcadReader
 from pyUTM.io import netnode_to_netlist
 from pyUTM.datatype import NetNode
 
@@ -54,79 +54,6 @@ class ParseCellRangeTester(unittest.TestCase):
         self.assertEqual(str(final_col), 'CD')
         self.assertEqual(final_row, 345)
 
-
-class NetHopperTester(unittest.TestCase):
-    def test_strip(self):
-        hopper = NetHopper()
-        net_dict = {
-            'Net1': [('R1', '1'), ('C2', '1'), ('M1', '1')],
-            'Net2': [('R1', '2'), ('R2', '2'), ('NT3', '1'), ('M2', '2')],
-        }
-        self.assertEqual(
-            hopper.strip(net_dict),
-            {
-                'Net1': ['R1', 'C2'],
-                'Net2': ['R1', 'R2', 'NT3'],
-            }
-        )
-
-    def test_diff_case1(self):
-        self.assertEqual(
-            NetHopper.diff(['R1', 'C2'], ['R2', 'C1']),
-            ['R1', 'C2']
-        )
-
-    def test_diff_case2(self):
-        self.assertEqual(
-            NetHopper.diff(['R1', 'C2'], ['C1', 'C2']),
-            ['R1']
-        )
-
-    # def test_convert_key_to_item_case1(self):
-        # ref_by_netname = {
-            # 'Net1': ['R1', 'R2'],
-            # 'Net2': ['R1'],
-            # 'Net3': ['R2']
-        # }
-        # ref_by_component = {
-            # 'R1': ['Net1', 'Net2'],
-            # 'R2': ['Net1', 'Net3']
-        # }
-        # self.assertEqual(
-            # PcadReader.convert_key_to_item(ref_by_netname), ref_by_component
-        # )
-        # self.assertEqual(
-            # PcadReader.convert_key_to_item(ref_by_component), ref_by_netname
-        # )
-
-    # def test_convert_key_to_item_case2(self):
-        # ref_by_netname = {
-            # 'Net1': ['R1'],
-            # 'Net2': ['R1'],
-            # 'Net3': ['R2']
-        # }
-        # ref_by_component = {
-            # 'R1': ['Net1', 'Net2'],
-            # 'R2': ['Net3']
-        # }
-        # self.assertEqual(
-            # PcadReader.convert_key_to_item(ref_by_netname), ref_by_component
-        # )
-        # self.assertEqual(
-            # PcadReader.convert_key_to_item(ref_by_component), ref_by_netname
-        # )
-
-    # def test_find_equivalent_nets_case1(self):
-        # ref_by_netname = {
-            # 'Net1': ['R1', 'R2'],
-            # 'Net2': ['R1'],
-            # 'Net3': ['R2']
-        # }
-        # ref_by_component = PcadReader.convert_key_to_item(ref_by_netname)
-        # self.assertEqual(
-            # PcadReader.find_equivalent_nets(ref_by_netname, ref_by_component),
-            # [('Net1', 'Net2', 'Net3')]
-        # )
 
     # def test_find_equivalent_nets_case2(self):
         # ref_by_netname = {

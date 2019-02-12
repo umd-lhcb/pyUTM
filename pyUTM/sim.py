@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Mon Feb 11, 2019 at 10:17 AM -0500
+# Last Change: Tue Feb 12, 2019 at 12:53 PM -0500
 
 import re
 
@@ -40,8 +40,7 @@ class CurrentFlow(object):
         if num_of_recursion == 0:
             connected_nets = []
             hopped_components = []
-
-        if num_of_recursion > max_num_of_recursion:
+        elif num_of_recursion > max_num_of_recursion:
             raise ValueError(
                 'Cannot exhaust hoppable components within {}. Giving up.'.format(
                     max_num_of_recursion
@@ -55,11 +54,11 @@ class CurrentFlow(object):
 
         else:
             unhopped_components = cls.diff(
-                comp_to_net(netname, hopped_components))
+                comp_to_net[netname], hopped_components)
             for component in unhopped_components:
-                unsurveyed_net = [i for i in comp_to_net[component]
-                                  if i != netname]
-                for net in unsurveyed_net:
+                unsurveyed_nets = [i for i in comp_to_net[component]
+                                   if i != netname]
+                for net in unsurveyed_nets:
                     cls.find_all_flows(
                         net,
                         net_to_comp, comp_to_net,
