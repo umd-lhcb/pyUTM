@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Tue Feb 12, 2019 at 01:00 PM -0500
+# Last Change: Tue Feb 12, 2019 at 01:25 PM -0500
 
 import unittest
 # from math import factorial
@@ -63,6 +63,27 @@ class CurrentFlowTester(unittest.TestCase):
         self.assertEqual(
             CurrentFlow.find_all_flows('Net1', net_to_comp, comp_to_net),
             ['Net1', 'Net2', 'Net3']
+        )
+        self.assertEqual(
+            CurrentFlow.find_all_flows('Net2', net_to_comp, comp_to_net),
+            ['Net2', 'Net1', 'Net3']
+        )
+        self.assertEqual(
+            CurrentFlow.find_all_flows('Net3', net_to_comp, comp_to_net),
+            ['Net3', 'Net1', 'Net2']
+        )
+
+    def test_find_all_flows_case2(self):
+        net_to_comp = {
+            'Net1': ['R1', 'R2'],
+            'Net2': ['R1'],
+            'Net3': ['R3'],
+            'Net4': ['R2', 'R3']
+        }
+        comp_to_net = CurrentFlow.swap_key_to_value(net_to_comp)
+        self.assertEqual(
+            CurrentFlow.find_all_flows('Net1', net_to_comp, comp_to_net),
+            ['Net1', 'Net2', 'Net3', 'Net4']
         )
 
 

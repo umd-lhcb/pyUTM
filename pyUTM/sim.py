@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Tue Feb 12, 2019 at 01:11 PM -0500
+# Last Change: Tue Feb 12, 2019 at 01:41 PM -0500
 
 import re
 
@@ -54,7 +54,7 @@ class CurrentFlow(object):
 
         else:
             unhopped_components = cls.diff(
-                hopped_components, comp_to_net[netname])
+                net_to_comp[netname], hopped_components)
             for component in unhopped_components:
                 unsurveyed_nets = [i for i in comp_to_net[component]
                                    if i != netname]
