@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Tue Feb 12, 2019 at 01:25 PM -0500
+# Last Change: Tue Feb 12, 2019 at 01:44 PM -0500
 
 import unittest
 # from math import factorial
@@ -61,16 +61,19 @@ class CurrentFlowTester(unittest.TestCase):
         }
         comp_to_net = CurrentFlow.swap_key_to_value(net_to_comp)
         self.assertEqual(
-            CurrentFlow.find_all_flows('Net1', net_to_comp, comp_to_net),
+            sorted(
+                CurrentFlow.find_all_flows('Net1', net_to_comp, comp_to_net)),
             ['Net1', 'Net2', 'Net3']
         )
         self.assertEqual(
-            CurrentFlow.find_all_flows('Net2', net_to_comp, comp_to_net),
-            ['Net2', 'Net1', 'Net3']
+            sorted(
+                CurrentFlow.find_all_flows('Net2', net_to_comp, comp_to_net)),
+            ['Net1', 'Net2', 'Net3']
         )
         self.assertEqual(
-            CurrentFlow.find_all_flows('Net3', net_to_comp, comp_to_net),
-            ['Net3', 'Net1', 'Net2']
+            sorted(
+                CurrentFlow.find_all_flows('Net3', net_to_comp, comp_to_net)),
+            ['Net1', 'Net2', 'Net3']
         )
 
     def test_find_all_flows_case2(self):
@@ -82,7 +85,23 @@ class CurrentFlowTester(unittest.TestCase):
         }
         comp_to_net = CurrentFlow.swap_key_to_value(net_to_comp)
         self.assertEqual(
-            CurrentFlow.find_all_flows('Net1', net_to_comp, comp_to_net),
+            sorted(
+                CurrentFlow.find_all_flows('Net1', net_to_comp, comp_to_net)),
+            ['Net1', 'Net2', 'Net3', 'Net4']
+        )
+        self.assertEqual(
+            sorted(
+                CurrentFlow.find_all_flows('Net2', net_to_comp, comp_to_net)),
+            ['Net1', 'Net2', 'Net3', 'Net4']
+        )
+        self.assertEqual(
+            sorted(
+                CurrentFlow.find_all_flows('Net3', net_to_comp, comp_to_net)),
+            ['Net1', 'Net2', 'Net3', 'Net4']
+        )
+        self.assertEqual(
+            sorted(
+                CurrentFlow.find_all_flows('Net4', net_to_comp, comp_to_net)),
             ['Net1', 'Net2', 'Net3', 'Net4']
         )
 
