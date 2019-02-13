@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Wed Feb 13, 2019 at 04:00 AM -0500
+# Last Change: Wed Feb 13, 2019 at 02:04 PM -0500
 
 import re
 
@@ -69,6 +69,8 @@ class CurrentFlow(object):
 
         if netname not in connected_nets:
             connected_nets.append(netname)
+        else:
+            return connected_nets
 
         if hopped_components == net_to_comp[netname]:
             return connected_nets
