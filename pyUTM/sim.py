@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Wed Feb 13, 2019 at 12:12 AM -0500
+# Last Change: Wed Feb 13, 2019 at 04:00 AM -0500
 
 import re
 
@@ -47,7 +47,8 @@ class CurrentFlow(object):
             for c in map(lambda x: x[0], components):
                 if True in map(lambda x: bool(re.search(x, c)), self.passable):
                     stripped.append(c)
-            result[netname] = stripped
+            if stripped:
+                result[netname] = stripped
 
         return result
 
