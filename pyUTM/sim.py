@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Tue Feb 12, 2019 at 01:41 PM -0500
+# Last Change: Tue Feb 12, 2019 at 09:17 PM -0500
 
 import re
 
@@ -51,7 +51,6 @@ class CurrentFlow(object):
 
         if hopped_components == net_to_comp[netname]:
             return connected_nets
-
         else:
             unhopped_components = cls.diff(
                 net_to_comp[netname], hopped_components)
