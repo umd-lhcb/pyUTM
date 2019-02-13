@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Tue Feb 12, 2019 at 01:17 AM -0500
+# Last Change: Wed Feb 13, 2019 at 01:59 AM -0500
 
 import openpyxl
 import re
@@ -169,12 +169,12 @@ class PcadNaiveReader(NestedListReader):
     # Heavily-modified Zishuo's implementation.
     def read(self):
         nets = super().read()
-        all_nets_dict = {}
+        all_nets = {}
 
         for net in filter(lambda i: isinstance(i, list) and i[0] == 'net',
                           nets):
             netname = net[1].strip('\"')
-            all_nets_dict[netname] = []
+            all_nets[netname] = []
 
             for node in \
                     filter(lambda i: isinstance(i, list) and i[0] == 'node',
@@ -182,41 +182,30 @@ class PcadNaiveReader(NestedListReader):
                 component, pin = map(
                     lambda x: x.upper(),  # Make sure component and pins are in upper case
                     map(lambda x: x.strip('\"'), node[1:3]))
-                all_nets_dict[netname].append((component, pin))
+                all_nets[netname].append((component, pin))
 
-        return all_nets_dict
+        return all_nets
 
 
 class PcadReader(PcadNaiveReader):
-    def read(self, nethopper=None):
-        all_nets_dict = super().read()
+    def read(self, nethopper):
+        all_nets = super().read()
+        equivalent_nets = nethopper.do(all_nets)
 
-        return all_nets_dict
+        self.make_equivalent_nets_identical(all_nets, equivalent_nets)
 
-    @staticmethod
-    def hopping_nets(ref_by_netname, ref_by_component):
-        hopped_nets_dict = dict()
-
-        # Now sort component list for each net, and make sure no duplicated
-        # component is contained
-        for net, components in hopped_nets_dict.items():
-            components = sorted(list(set(components)))
-            hopped_nets_dict[net] = components
-
-        return hopped_nets_dict
+        return all_nets
 
     @staticmethod
-    def generate_hoppable_ref_by_component(all_nets_dict, hoppable):
-        hoppable_ref_by_component = defaultdict(list)
-
-        for netname in all_nets_dict.keys():
-            for component in all_nets_dict[netname]:
-                # Now check if the connector is a hoppable one.
-                if True in map(lambda x: bool(re.search(x, component)),
-                               hoppable):
-                    hoppable_ref_by_component[component].append(netname)
-
-        return hoppable_ref_by_component
+    def make_equivalent_nets_identical(nets, equivalency):
+        for g in equivalency:
+            head, tail = g[0], g[1:]
+            # Update the head net
+            for n in tail:
+                nets[head] += nets[n]
+            # Now make sure all nets in tail are equivalent to head
+            for n in tail:
+                nets[n] = nets[head]
 
 
 ############

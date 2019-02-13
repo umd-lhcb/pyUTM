@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Tue Feb 12, 2019 at 01:59 PM -0500
+# Last Change: Wed Feb 13, 2019 at 01:59 AM -0500
 
 import unittest
 # from math import factorial
@@ -14,6 +14,7 @@ from pyUTM.io import parse_cell_range
 from pyUTM.io import PcadReader
 from pyUTM.io import netnode_to_netlist
 from pyUTM.datatype import NetNode
+from pyUTM.sim import CurrentFlow
 
 
 class GenerateCsvLineTester(unittest.TestCase):
@@ -55,13 +56,15 @@ class ParseCellRangeTester(unittest.TestCase):
         self.assertEqual(final_row, 345)
 
 
-    # def test_net_hop_with_real_netlist(self):
-        # reader = PcadReader('./comet_daughter.sample.net')
-        # result = reader.read(hoppable=[r'^W\d+'])
-        # self.assertEqual(result['NetD1_1'], result['DIFF_TERM_STV'])
+class PcadReaderTester(unittest.TestCase):
+    def test_net_hop_with_real_netlist(self):
+        reader = PcadReader('./comet_daughter.sample.net')
+        nethopper = CurrentFlow(passable=[r'^W\d+'])
+        result = reader.read(nethopper=nethopper)
+        self.assertEqual(result['NetD1_1'], result['DIFF_TERM_STV'])
 
 
-class NetNodeToNetListTest(unittest.TestCase):
+class NetNodeToNetListTester(unittest.TestCase):
     def test_dcb_pt_node(self):
         nodes_dict = {
             NetNode('JD1', 'A1', 'JP1', 'A1'):
