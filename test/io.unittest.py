@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Wed Feb 13, 2019 at 04:05 AM -0500
+# Last Change: Wed Feb 13, 2019 at 04:08 AM -0500
 
 import unittest
 # from math import factorial
@@ -62,8 +62,9 @@ class PcadReaderTester(unittest.TestCase):
         nethopper = CurrentFlow(passable=[r'^W\d+'])
         result = reader.read(nethopper=nethopper)
         self.assertEqual(result['NetD1_1'], result['DIFF_TERM_STV'])
-        self.assertEqual(result['NetD1_1'], result['NETD2_1'])
+        self.assertEqual(result['NetD1_1'], result['NetD2_1'])
         self.assertEqual(result['NetD1_1'], result['J1_LOC_TERM'])
+        self.assertEqual(result['NetD1_1'], result['J2_LOC_TERM'])
 
 
 class NetNodeToNetListTester(unittest.TestCase):
