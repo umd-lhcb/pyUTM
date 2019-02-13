@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Tue Feb 12, 2019 at 01:44 PM -0500
+# Last Change: Wed Feb 13, 2019 at 01:44 AM -0500
 
 import unittest
 # from math import factorial
@@ -103,6 +103,19 @@ class CurrentFlowTester(unittest.TestCase):
             sorted(
                 CurrentFlow.find_all_flows('Net4', net_to_comp, comp_to_net)),
             ['Net1', 'Net2', 'Net3', 'Net4']
+        )
+
+    def test_realistic(self):
+        real_nets = {
+            'Net1': [('R1', 1), ('R2', 1)],
+            'Net2': [('R1', 2)],
+            'Net3': [('R3', 1)],
+            'Net4': [('R2', 2), ('R3', 2)]
+        }
+        worker = CurrentFlow()
+        self.assertEqual(
+            list(map(sorted, worker.do(real_nets))),
+            [['Net1', 'Net2', 'Net3', 'Net4']]
         )
 
 

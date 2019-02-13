@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Tue Feb 12, 2019 at 09:17 PM -0500
+# Last Change: Wed Feb 13, 2019 at 12:12 AM -0500
 
 import re
 
@@ -16,8 +16,28 @@ class CurrentFlow(object):
     def __init__(self, passable=[r'^R\d+', r'^C\d+', r'^NT\d+']):
         self.passable = passable
 
-    def do(self):
-        pass
+    def do(self, nets):
+        net_to_comp = self.strip(nets)
+        comp_to_net = self.swap_key_to_value(net_to_comp)
+        equivalent_nets = []
+
+        for net in net_to_comp.keys():
+            # Always process the first net
+            if len(equivalent_nets) == 0:
+                equivalent_group = self.find_all_flows(
+                    net, net_to_comp, comp_to_net)
+                equivalent_nets.append(equivalent_group)
+
+            # For subsequent nets, only process if it is not in any known group
+            elif True not in map(lambda x: net in x, equivalent_nets):
+                equivalent_group = self.find_all_flows(
+                    net, net_to_comp, comp_to_net)
+                equivalent_nets.append(equivalent_group)
+
+            else:
+                pass
+
+        return equivalent_nets
 
     def strip(self, d):
         result = {}
