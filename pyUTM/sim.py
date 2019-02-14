@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Wed Feb 13, 2019 at 02:04 PM -0500
+# Last Change: Wed Feb 13, 2019 at 08:02 PM -0500
 
 import re
 
@@ -52,6 +52,8 @@ class CurrentFlow(object):
 
         return result
 
+    # NOTE: I still think this is ugly, but I don't have an idea on how to
+    #       make it more clear.
     @classmethod
     def find_all_flows(cls,
                        netname,
