@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Mon Feb 11, 2019 at 03:16 PM -0500
+# Last Change: Thu Feb 14, 2019 at 11:19 AM -0500
 
 from __future__ import annotations
 
@@ -75,6 +75,10 @@ class Selector(metaclass=abc.ABCMeta):
 class RuleBase(Rule):
     debug_node = None
 
+    @staticmethod
+    def debug_msg(msg):
+        print(msg)
+
     @classmethod
     def node_to_str(cls, node):
         attrs = cls.node_data_properties(node)
@@ -89,10 +93,6 @@ class RuleBase(Rule):
             s += ', '
 
         return s[:-2]
-
-    @staticmethod
-    def debug_msg(msg):
-        print(msg)
 
     @staticmethod
     def node_data_properties(node):
