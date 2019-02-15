@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Wed Feb 13, 2019 at 09:30 PM -0500
+# Last Change: Fri Feb 15, 2019 at 11:57 AM -0500
 
 import openpyxl
 import re
@@ -182,7 +182,7 @@ class PcadNaiveReader(NestedListReader):
                 component, pin = map(
                     lambda x: x.upper(),  # Make sure component and pins are in upper case
                     map(lambda x: x.strip('\"'), node[1:3]))
-                all_nets[netname].append([component, pin])
+                all_nets[netname].append((component, pin))
 
         return all_nets
 
