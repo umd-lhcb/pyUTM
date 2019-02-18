@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Mon Feb 18, 2019 at 01:33 AM -0500
+# Last Change: Mon Feb 18, 2019 at 01:38 AM -0500
 
 import openpyxl
 import re
@@ -259,10 +259,9 @@ def netnode_to_netlist(nodes):
     return nets
 
 
-class PcadBackPlaneReader(PcadNaiveReader):
-    def read(self):
-        nets = super().read()
-        return (self.parse_netlist_dict(nets), nets)
+class NetNodeGen(object):
+    def do(self, nets):
+        return self.parse_netlist_dict(nets)
 
     def parse_netlist_dict(self, all_nets_dict):
         net_nodes_dict = {}
