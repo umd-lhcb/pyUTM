@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Wed Feb 13, 2019 at 04:08 AM -0500
+# Last Change: Sun Feb 17, 2019 at 09:04 PM -0500
 
 import unittest
 # from math import factorial
@@ -58,7 +58,7 @@ class ParseCellRangeTester(unittest.TestCase):
 
 class PcadReaderTester(unittest.TestCase):
     def test_net_hop_with_real_netlist(self):
-        reader = PcadReader('./comet_daughter.sample.net')
+        reader = PcadReader('./comet_db.sample.net')
         nethopper = CurrentFlow(passable=[r'^W\d+'])
         result = reader.read(nethopper=nethopper)
         self.assertEqual(result['NetD1_1'], result['DIFF_TERM_STV'])
