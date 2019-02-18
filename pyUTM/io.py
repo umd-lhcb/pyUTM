@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Mon Feb 18, 2019 at 01:25 AM -0500
+# Last Change: Mon Feb 18, 2019 at 01:33 AM -0500
 
 import openpyxl
 import re
@@ -11,10 +11,8 @@ from pyparsing import nestedExpr
 from collections import defaultdict
 from itertools import zip_longest
 
-from tco import with_continuations  # Make Python do tail recursion elimination
-
 from .datatype import range, ColNum, ExcelCell
-from .datatype import NetNode, GenericNetNode
+from .datatype import NetNode
 from .common import flatten
 
 
@@ -261,18 +259,6 @@ def netnode_to_netlist(nodes):
     return nets
 
 
-@with_continuations()
-def make_combinations(src, dest=[], self=None):
-    if len(src) == 1:
-        return dest
-
-    else:
-        head = src[0]
-        for i in src[1:]:
-            dest.append((head, i))
-        return self(src[1:], dest)
-
-
 class PcadBackPlaneReader(PcadNaiveReader):
     def read(self):
         nets = super().read()
@@ -294,16 +280,6 @@ class PcadBackPlaneReader(PcadNaiveReader):
             if dcb_nodes and pt_nodes:
                 for d, p in zip_longest(dcb_nodes, pt_nodes):
                     net_nodes_dict[self.net_node_gen(d, p)] = {
-                        'NETNAME': netname,
-                        'ATTR': None
-                    }
-
-            # Now deal with DCB-DCB connections, with recursion
-            if dcb_nodes:
-                dcb_combo = make_combinations(dcb_nodes)
-                for d1, d2 in dcb_combo:
-                    net_nodes_dict[self.net_node_gen(
-                        d1, d2, datatype=GenericNetNode)] = {
                         'NETNAME': netname,
                         'ATTR': None
                     }
