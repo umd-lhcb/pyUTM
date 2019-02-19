@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Tue Jan 22, 2019 at 01:19 PM -0500
+# Last Change: Tue Feb 19, 2019 at 03:27 PM -0500
 
 import unittest
 
@@ -44,24 +44,6 @@ class RuleNetDummy(RuleNet):
 
     def debug_msg(self, msg):
         self.last_debug_msg = msg
-
-
-class RulePDTester(unittest.TestCase):
-    def test_padding(self):
-        self.assertEqual(RulePD.PADDING('A1'), 'A01')
-        self.assertEqual(RulePD.PADDING('A11'), 'A11')
-
-    def test_depadding(self):
-        self.assertEqual(RulePD.DEPADDING('A1'), 'A1')
-        self.assertEqual(RulePD.DEPADDING('A01'), 'A1')
-        self.assertEqual(RulePD.DEPADDING('A11'), 'A11')
-
-    def test_dcb_id(self):
-        self.assertEqual(RulePD.DCBID('00 / X-0'), '0')
-
-    def test_pt_id(self):
-        self.assertEqual(RulePD.PTID('01 / X-0-S'), '1')
-        self.assertEqual(RulePD.PTID('00|01'), '00|01')
 
 
 class SelectorPDTester(unittest.TestCase):
