@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Mon Feb 18, 2019 at 01:25 AM -0500
+# Last Change: Tue Feb 19, 2019 at 03:23 PM -0500
 
 import re
 
 from copy import deepcopy
 
-from .selection import RulePD
 from .common import split_netname
 from .datatype import NetNode
 
@@ -38,12 +37,12 @@ def legacy_csv_line_dcb(node, prop):
             net_dcb1, net_dcb2, net_tail = netname.split('_', 2)
 
             if node.Node1 == net_dcb1:
-                net_dcb1 += RulePD.PADDING(node.Node1_PIN)
-                net_dcb2 += RulePD.PADDING(node.Node2_PIN)
+                net_dcb1 += PADDING(node.Node1_PIN)
+                net_dcb2 += PADDING(node.Node2_PIN)
 
             else:
-                net_dcb1 += RulePD.PADDING(node.Node2_PIN)
-                net_dcb2 += RulePD.PADDING(node.Node1_PIN)
+                net_dcb1 += PADDING(node.Node2_PIN)
+                net_dcb2 += PADDING(node.Node1_PIN)
 
             if int(node.Node1[2:]) > int(node.Node2[2:]):
                 s += (net_dcb2 + '_' + net_dcb1 + '_' + net_tail)
@@ -66,17 +65,17 @@ def legacy_csv_line_dcb(node, prop):
 
             if node.DCB is not None:
                 if node.DCB in net_head:
-                    net_head += RulePD.PADDING(node.DCB_PIN)
+                    net_head += PADDING(node.DCB_PIN)
 
                 if node.DCB in net_body:
-                    net_body += RulePD.PADDING(node.DCB_PIN)
+                    net_body += PADDING(node.DCB_PIN)
 
             if node.PT is not None:
                 if node.PT in net_head:
-                    net_head += RulePD.PADDING(node.PT_PIN)
+                    net_head += PADDING(node.PT_PIN)
 
                 if node.PT in net_body:
-                    net_body += RulePD.PADDING(node.PT_PIN)
+                    net_body += PADDING(node.PT_PIN)
 
             s += (net_head + attr + net_body + '_' + net_tail)
 
@@ -85,10 +84,10 @@ def legacy_csv_line_dcb(node, prop):
 
             # Take advantage of lazy Boolean evaluation in Python.
             if node.DCB is not None and node.DCB in net_head:
-                net_head += RulePD.PADDING(node.DCB_PIN)
+                net_head += PADDING(node.DCB_PIN)
 
             if node.PT is not None and node.PT in net_head:
-                net_head += RulePD.PADDING(node.PT_PIN)
+                net_head += PADDING(node.PT_PIN)
 
             s += (net_head + attr + net_tail)
     s += ','
@@ -96,7 +95,7 @@ def legacy_csv_line_dcb(node, prop):
     s += node.DCB[2:] if node.DCB is not None else ''
     s += ','
 
-    s += RulePD.PADDING(node.DCB_PIN) if node.DCB_PIN is not None else ''
+    s += PADDING(node.DCB_PIN) if node.DCB_PIN is not None else ''
     s += ','
 
     if node.PT is not None and '|' in node.PT:
@@ -105,7 +104,7 @@ def legacy_csv_line_dcb(node, prop):
         s += node.PT[2:] if node.PT is not None else ''
     s += ','
 
-    s += RulePD.PADDING(node.PT_PIN) if node.PT_PIN is not None else ''
+    s += PADDING(node.PT_PIN) if node.PT_PIN is not None else ''
 
     return s
 
@@ -129,17 +128,17 @@ def legacy_csv_line_pt(node, prop):
 
             if node.DCB is not None:
                 if node.DCB in net_head:
-                    net_head += RulePD.PADDING(node.DCB_PIN)
+                    net_head += PADDING(node.DCB_PIN)
 
                 if node.DCB in net_body:
-                    net_body += RulePD.PADDING(node.DCB_PIN)
+                    net_body += PADDING(node.DCB_PIN)
 
             if node.PT is not None:
                 if node.PT in net_head:
-                    net_head += RulePD.PADDING(node.PT_PIN)
+                    net_head += PADDING(node.PT_PIN)
 
                 if node.PT in net_body:
-                    net_body += RulePD.PADDING(node.PT_PIN)
+                    net_body += PADDING(node.PT_PIN)
 
             s += (net_head + attr + net_body + '_' + net_tail)
 
@@ -148,10 +147,10 @@ def legacy_csv_line_pt(node, prop):
 
             # Take advantage of lazy Boolean evaluation in Python.
             if node.DCB is not None and node.DCB in net_head:
-                net_head += RulePD.PADDING(node.DCB_PIN)
+                net_head += PADDING(node.DCB_PIN)
 
             if node.PT is not None and node.PT in net_head:
-                net_head += RulePD.PADDING(node.PT_PIN)
+                net_head += PADDING(node.PT_PIN)
 
             s += (net_head + attr + net_tail)
     s += ','
@@ -159,7 +158,7 @@ def legacy_csv_line_pt(node, prop):
     s += node.PT[2:] if node.PT is not None else ''
     s += ','
 
-    s += RulePD.PADDING(node.PT_PIN) if node.PT_PIN is not None else ''
+    s += PADDING(node.PT_PIN) if node.PT_PIN is not None else ''
     s += ','
     s += ','
 
