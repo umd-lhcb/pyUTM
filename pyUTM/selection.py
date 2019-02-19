@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Thu Feb 14, 2019 at 11:19 AM -0500
+# Last Change: Tue Feb 19, 2019 at 03:25 PM -0500
 
 from __future__ import annotations
 
-import re
 import abc
 
 from collections import defaultdict
@@ -129,38 +128,6 @@ class RulePD(RuleBase):
             'NOTE': note,
             'ATTR': attr
         }
-
-    @staticmethod
-    def PADDING(s):
-        # FIXME: Still unclear on how to deal with multiple pins.
-        if '|' in s or '/' in s:
-            # For now, return multiple pins spec as it-is.
-            return s
-        else:
-            letter, num = filter(None, re.split(r'(\d+)', s))
-            num = '0'+num if len(num) == 1 else num
-            return letter+num
-
-    @staticmethod
-    def DEPADDING(s):
-        if '|' in s or '/' in s:
-            return s
-        else:
-            letter, num = filter(None, re.split(r'(\d+)', s))
-            return letter + str(int(num))
-
-    @staticmethod
-    def DCBID(s):
-        dcb_idx, _, _ = s.split(' ', 2)
-        return str(int(dcb_idx))
-
-    @staticmethod
-    def PTID(s):
-        if '|' in s:
-            return s
-        else:
-            pt_idx, _, _ = s.split()
-        return str(int(pt_idx))
 
 
 class SelectorPD(Selector):
