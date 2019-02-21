@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Tue Feb 19, 2019 at 03:25 PM -0500
+# Last Change: Thu Feb 21, 2019 at 12:52 PM -0500
 
 from __future__ import annotations
 
@@ -189,6 +189,33 @@ class SelectorNet(Selector):
                 result = rule.filter(node)
                 # NOTE: 'False' -> This entry has been checked by a matching
                 #       rule and no error is detected.
+                if result is False:
+                    break
+
+                elif result is not None:
+                    section, entry = result
+                    processed_dataset[section].append(entry)
+                    break
+
+        return processed_dataset
+
+
+######################################################
+# Selection rules for alternative schematic checking #
+######################################################
+
+class RuleNetlist(RuleBase):
+    pass
+
+
+class SelectorNetlist(Selector):
+    def do(self):
+        processed_dataset = defaultdict(list)
+
+        for netname, components in self.dataset.items():
+            for rule in self.rules:
+                result = rule.filter(netname, components)
+
                 if result is False:
                     break
 
