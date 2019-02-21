@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Thu Feb 21, 2019 at 01:09 PM -0500
+# Last Change: Thu Feb 21, 2019 at 01:12 PM -0500
 
 from __future__ import annotations
 
@@ -204,7 +204,7 @@ class SelectorNet(Selector):
     def do(self):
         processed_dataset = defaultdict(list)
 
-        for key, value in self.dataset.keys():
+        for key, value in self.dataset.items():
             for rule in self.rules:
                 result = rule.filter(key, value)
                 # NOTE: 'False' -> This entry has been checked by a matching
