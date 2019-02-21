@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Thu Feb 21, 2019 at 12:52 PM -0500
+# Last Change: Thu Feb 21, 2019 at 01:09 PM -0500
 
 from __future__ import annotations
 
@@ -161,7 +161,7 @@ class RuleNet(RuleBase):
 
         self.debug_node = None
 
-    def filter(self, node):
+    def filter(self, node, attr):
         if self.match(node):
             if self.debug_node is None:
                 pass
@@ -180,42 +180,35 @@ class RuleNet(RuleBase):
         return False  # This is just a sane default value
 
 
+class RuleNetlist(RuleNet):
+    def __init__(self, ref_netlist):
+        self.ref_netlist = ref_netlist
+
+    def filter(self, netname, components):
+        if self.match(netname, components):
+            if self.debug_node is None:
+                pass
+            elif netname == self.debug_node:
+                self.debug_msg(
+                    'Net {} is being handled by: {}'.format(
+                        netname,
+                        self.__class__.__name__)
+                )
+            else:
+                pass
+
+            return self.process(netname, components)
+
+
 class SelectorNet(Selector):
     def do(self):
         processed_dataset = defaultdict(list)
 
-        for node in self.dataset.keys():
+        for key, value in self.dataset.keys():
             for rule in self.rules:
-                result = rule.filter(node)
+                result = rule.filter(key, value)
                 # NOTE: 'False' -> This entry has been checked by a matching
                 #       rule and no error is detected.
-                if result is False:
-                    break
-
-                elif result is not None:
-                    section, entry = result
-                    processed_dataset[section].append(entry)
-                    break
-
-        return processed_dataset
-
-
-######################################################
-# Selection rules for alternative schematic checking #
-######################################################
-
-class RuleNetlist(RuleBase):
-    pass
-
-
-class SelectorNetlist(Selector):
-    def do(self):
-        processed_dataset = defaultdict(list)
-
-        for netname, components in self.dataset.items():
-            for rule in self.rules:
-                result = rule.filter(netname, components)
-
                 if result is False:
                     break
 
