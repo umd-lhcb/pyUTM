@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Thu Feb 21, 2019 at 01:12 PM -0500
+# Last Change: Sun Feb 24, 2019 at 12:04 AM -0500
 
 from __future__ import annotations
 
@@ -207,12 +207,12 @@ class SelectorNet(Selector):
         for key, value in self.dataset.items():
             for rule in self.rules:
                 result = rule.filter(key, value)
-                # NOTE: 'False' -> This entry has been checked by a matching
+                # NOTE: 'None' -> This entry has been checked by a matching
                 #       rule and no error is detected.
-                if result is False:
+                if result is None:
                     break
 
-                elif result is not None:
+                else:
                     section, entry = result
                     processed_dataset[section].append(entry)
                     break
