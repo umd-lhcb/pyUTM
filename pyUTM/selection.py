@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Mon Feb 25, 2019 at 03:04 PM -0500
+# Last Change: Mon Feb 25, 2019 at 03:07 PM -0500
 
 from __future__ import annotations
 
@@ -152,7 +152,6 @@ class SelectorPD(Selector):
 ##########################################
 # Selection rules for schematic checking #
 ##########################################
-
 
 class RuleNet(RuleBase):
     NETLISTCHECK_PROCESSED_NO_ERROR_FOUND = 0
