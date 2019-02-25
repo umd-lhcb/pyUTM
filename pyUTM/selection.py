@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Mon Feb 25, 2019 at 02:52 PM -0500
+# Last Change: Mon Feb 25, 2019 at 03:04 PM -0500
 
 from __future__ import annotations
 
@@ -153,10 +153,10 @@ class SelectorPD(Selector):
 # Selection rules for schematic checking #
 ##########################################
 
-NETLISTCHECK_PROCESSED_NO_ERROR_FOUND = 0
-
 
 class RuleNet(RuleBase):
+    NETLISTCHECK_PROCESSED_NO_ERROR_FOUND = 0
+
     def __init__(self, node_dict, node_list, reference):
         self.node_dict = node_dict
         self.node_list = node_list
@@ -166,21 +166,17 @@ class RuleNet(RuleBase):
 
     def filter(self, node, attr):
         if self.match(node):
-            if self.debug_node is None:
-                pass
-            elif node == self.debug_node:
+            if self.debug_node is not None and node == self.debug_node:
                 self.debug_msg(
                     'Node {} is being handled by: {}'.format(
                         self.node_to_str(self.debug_node),
                         self.__class__.__name__)
                 )
-            else:
-                pass
 
             return self.process(node)
 
     def process(self, node):
-        return NETLISTCHECK_PROCESSED_NO_ERROR_FOUND
+        return self.NETLISTCHECK_PROCESSED_NO_ERROR_FOUND
 
 
 class RuleNetlist(RuleNet):
@@ -189,16 +185,12 @@ class RuleNetlist(RuleNet):
 
     def filter(self, netname, components):
         if self.match(netname, components):
-            if self.debug_node is None:
-                pass
-            elif netname == self.debug_node:
+            if self.debug_node is not None and netname == self.debug_node:
                 self.debug_msg(
                     'Net {} is being handled by: {}'.format(
                         netname,
                         self.__class__.__name__)
                 )
-            else:
-                pass
 
             return self.process(netname, components)
 
@@ -211,7 +203,7 @@ class SelectorNet(Selector):
             for rule in self.rules:
                 result = rule.filter(key, value)
 
-                if result == NETLISTCHECK_PROCESSED_NO_ERROR_FOUND:
+                if result == RuleNet.NETLISTCHECK_PROCESSED_NO_ERROR_FOUND:
                     break
 
                 elif result is not None:
