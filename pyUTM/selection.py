@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Sun Feb 24, 2019 at 12:04 AM -0500
+# Last Change: Mon Feb 25, 2019 at 02:52 PM -0500
 
 from __future__ import annotations
 
@@ -153,6 +153,9 @@ class SelectorPD(Selector):
 # Selection rules for schematic checking #
 ##########################################
 
+NETLISTCHECK_PROCESSED_NO_ERROR_FOUND = 0
+
+
 class RuleNet(RuleBase):
     def __init__(self, node_dict, node_list, reference):
         self.node_dict = node_dict
@@ -177,7 +180,7 @@ class RuleNet(RuleBase):
             return self.process(node)
 
     def process(self, node):
-        return False  # This is just a sane default value
+        return NETLISTCHECK_PROCESSED_NO_ERROR_FOUND
 
 
 class RuleNetlist(RuleNet):
@@ -207,12 +210,11 @@ class SelectorNet(Selector):
         for key, value in self.dataset.items():
             for rule in self.rules:
                 result = rule.filter(key, value)
-                # NOTE: 'None' -> This entry has been checked by a matching
-                #       rule and no error is detected.
-                if result is None:
+
+                if result == NETLISTCHECK_PROCESSED_NO_ERROR_FOUND:
                     break
 
-                else:
+                elif result is not None:
                     section, entry = result
                     processed_dataset[section].append(entry)
                     break
