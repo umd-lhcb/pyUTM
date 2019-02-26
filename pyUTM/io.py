@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Mon Feb 18, 2019 at 01:38 AM -0500
+# Last Change: Tue Feb 26, 2019 at 02:55 PM -0500
 
 import openpyxl
 import re
@@ -169,7 +169,7 @@ class NestedListReader(object):
 
 class PcadNaiveReader(NestedListReader):
     # Heavily-modified Zishuo's implementation.
-    def read(self):
+    def read(self, component_postprocessor=lambda x: x.upper()):
         nets = super().read()
         all_nets = {}
 
@@ -181,8 +181,9 @@ class PcadNaiveReader(NestedListReader):
             for node in \
                     filter(lambda i: isinstance(i, list) and i[0] == 'node',
                            net):
+
                 component, pin = map(
-                    lambda x: x.upper(),  # Make sure component and pins are in upper case
+                    component_postprocessor,
                     map(lambda x: x.strip('\"'), node[1:3]))
                 all_nets[netname].append((component, pin))
 
@@ -190,8 +191,8 @@ class PcadNaiveReader(NestedListReader):
 
 
 class PcadReader(PcadNaiveReader):
-    def read(self, nethopper):
-        all_nets = super().read()
+    def read(self, nethopper, **kwargs):
+        all_nets = super().read(**kwargs)
         equivalent_nets = nethopper.do(all_nets)
 
         self.make_equivalent_nets_identical(all_nets, equivalent_nets)
