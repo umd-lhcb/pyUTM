@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Wed Feb 13, 2019 at 06:29 PM -0500
+# Last Change: Tue Feb 26, 2019 at 02:38 PM -0500
 
 import unittest
 # from math import factorial
@@ -134,6 +134,24 @@ class CurrentFlowTester(unittest.TestCase):
         self.assertEqual(
             list(map(sorted, worker.do(real_nets))),
             [['Net1', 'Net2', 'Net3', 'Net4']]
+        )
+
+    def test_compnents_appear_more_than_twice(self):
+        net_to_comp = {
+            'Net1': ['CxRB_320', 'CxRB_320', 'CxRB_320', 'R2'],
+            'Net2': ['CxRB_320', 'CxRB_320', 'CxRB_320'],
+        }
+        comp_to_net = CurrentFlow.swap_key_to_value(net_to_comp)
+        self.assertEqual(
+            sorted(
+                CurrentFlow.find_all_flows('Net1', net_to_comp, comp_to_net)),
+            ['Net1', 'Net2', ]
+        )
+
+        self.assertEqual(
+            sorted(
+                CurrentFlow.find_all_flows('Net2', net_to_comp, comp_to_net)),
+            ['Net1', 'Net2', ]
         )
 
 
