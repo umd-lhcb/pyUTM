@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Wed Feb 27, 2019 at 05:04 PM -0500
+# Last Change: Wed Feb 27, 2019 at 05:06 PM -0500
 
 import openpyxl
 import re
@@ -20,7 +20,7 @@ from .common import flatten
 # General write to file #
 #########################
 
-def write_to_file(filename, data, mode='a', eol='\n'):
+def write_to_file(filename, data, mode='w', eol='\n'):
     with open(filename, mode) as f:
         for row in data:
             f.write(row + eol)
