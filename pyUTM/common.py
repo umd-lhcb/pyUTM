@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Wed Feb 06, 2019 at 04:00 PM -0500
+# Last Change: Fri Mar 01, 2019 at 05:15 PM -0500
 
 from collections import defaultdict
 
@@ -260,12 +260,25 @@ def transpose(l):
     return dict(result)
 
 
+def unpack_one_elem_dict(d):
+    return tuple(d.items())[0]
+
+
 def flatten(l, header='PlaceHolder'):
     result = []
     for d in l:
-        key, value = tuple(d.items())[0]
+        key, value = unpack_one_elem_dict(d)
         value[header] = key
         result.append(value)
+    return result
+
+
+def flatten_more(d, header='PlaceHolder'):
+    result = []
+    for k, items in d.items():
+        for i in items:
+            i[header] = k
+            result.append(i)
     return result
 
 
@@ -275,6 +288,15 @@ def unflatten(l, header):
         key = d[header]
         del d[header]
         result.append({key: d})
+    return result
+
+
+def unflatten_all(d, *args):
+    result = defaultdict(dict)
+    for k, items in d.items():
+        for i in unflatten(items, *args):
+            pin, prop = unpack_one_elem_dict(i)
+            result[k][pin] = prop
     return result
 
 
