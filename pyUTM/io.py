@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Mar 01, 2019 at 02:25 PM -0500
+# Last Change: Fri Mar 01, 2019 at 02:36 PM -0500
 
 import openpyxl
 import re
@@ -68,6 +68,13 @@ def write_to_csv(filename, data, headers, **kwargs):
     header_row = [','.join(headers.keys())]
     body = [','.join([str(entry[k]) for _, k in headers.items()])
             for entry in data]
+    write_to_file(filename, header_row+body, **kwargs)
+
+
+@dispatch((str, Path), list, list)
+def write_to_csv(filename, data, headers, **kwargs):
+    header_row = [','.join(headers)]
+    body = [','.join(row) for row in data]
     write_to_file(filename, header_row+body, **kwargs)
 
 
