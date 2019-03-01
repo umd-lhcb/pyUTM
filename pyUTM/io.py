@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Mar 01, 2019 at 01:14 PM -0500
+# Last Change: Fri Mar 01, 2019 at 02:25 PM -0500
 
 import openpyxl
 import re
@@ -58,9 +58,17 @@ def csv_line(node, prop):
 
 
 @dispatch((str, Path), dict, FunctionType)
-def write_to_csv(filename, data, formatter, mode='w', eol='\n'):
-    output = [formatter(node, prop) for node, prop in data.items()]
-    write_to_file(filename, output, mode=mode, eol=eol)
+def write_to_csv(filename, data, formatter, **kwargs):
+    output = [formatter(k, v) for k, v in data.items()]
+    write_to_file(filename, output, **kwargs)
+
+
+@dispatch((str, Path), list, dict)
+def write_to_csv(filename, data, headers, **kwargs):
+    header_row = [','.join(headers.keys())]
+    body = [','.join([str(entry[k]) for _, k in headers.items()])
+            for entry in data]
+    write_to_file(filename, header_row+body, **kwargs)
 
 
 #######################
