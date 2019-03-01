@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Wed Feb 27, 2019 at 05:06 PM -0500
+# Last Change: Fri Mar 01, 2019 at 12:44 PM -0500
 
 import openpyxl
 import re
@@ -10,6 +10,8 @@ import yaml
 from pyparsing import nestedExpr
 from collections import defaultdict
 from itertools import zip_longest
+from multipledispatch import dispatch
+from typing import Dict
 
 from .datatype import range, ColNum, ExcelCell
 from .datatype import NetNode
@@ -54,11 +56,10 @@ def csv_line(node, prop):
     return s[:-1]
 
 
+@dispatch(str, Dict[NetNode, dict])
 def write_to_csv(filename, data, formatter=csv_line, mode='w', eol='\n'):
-    with open(filename, mode) as f:
-        for node in data.keys():
-            attr = data[node]
-            f.write(formatter(node, attr) + eol)
+    output = [formatter(node, prop) for node, prop in data.items()]
+    write_to_file(filename, output, mode=mode, eol=eol)
 
 
 #######################
