@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Mon Feb 25, 2019 at 03:07 PM -0500
+# Last Change: Tue Mar 05, 2019 at 06:01 PM -0500
 
 from __future__ import annotations
 
@@ -106,10 +106,14 @@ class RuleBase(Rule):
 class RulePD(RuleBase):
     PT_PREFIX = 'JP'
     DCB_PREFIX = 'JD'
+    counter = 0
 
     def filter(self, data, connector):
         if self.match(data, connector):
             result = self.process(data, connector)
+
+            # Count number of hits
+            self.counter += 1
 
             # For debugging
             if self.debug_node is not None and self.debug_node == result[0]:
