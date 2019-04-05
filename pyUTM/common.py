@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Mar 01, 2019 at 05:15 PM -0500
+# Last Change: Fri Apr 05, 2019 at 12:45 PM -0400
 
 from collections import defaultdict
 
@@ -9,7 +9,13 @@ from collections import defaultdict
 # Constants #
 #############
 
-# Table for swapping JD# from Proto(right-hand side) to True(left-hand side)
+# Table for swapping JD# from Proto (right side) to True (left side)
+#
+# NOTE: The right and left are defined correctly. These should be interpreted as
+# The key (left) being the connector name on the True, and the value (right)
+# being the the connector name on the Proto.
+#
+# In other words: The <key> on True is the <value> on Proto
 jd_swapping_true = {
     'JD0': 'JD0',
     'JD1': 'JD4',
@@ -25,7 +31,7 @@ jd_swapping_true = {
     'JD11': 'JD11'
 }
 
-# Table for swapping JD# from Proto(right-hand side) to Mirror(left-hand side)
+# Table for swapping JD# from Proto (right side) to Mirror (left side)
 jd_swapping_mirror = {
     'JD0': 'JD1',
     'JD1': 'JD5',
@@ -57,7 +63,7 @@ jp_flex_type_proto = {
     'JP11': 'S-2-M',
 }
 
-# Table for translating JP# from Proto/True (right side) to Mirror (left side)
+# Table for translating JP# from Proto (right side) to Mirror (left side)
 jp_swapping_mirror = {
     'JP0': 'JP2',
     'JP1': 'JP3',
