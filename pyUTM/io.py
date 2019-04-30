@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Mar 01, 2019 at 02:36 PM -0500
+# Last Change: Tue Apr 30, 2019 at 01:26 AM -0400
 
 import openpyxl
 import re
@@ -19,14 +19,19 @@ from .datatype import NetNode
 from .common import flatten
 
 
-#########################
-# General write to file #
-#########################
+##############################
+# General write/read to file #
+##############################
 
 def write_to_file(filename, data, mode='w', eol='\n'):
     with open(filename, mode) as f:
         for row in data:
             f.write(row + eol)
+
+
+class ReaderWriter(object):
+    def __init__(self, filename):
+        self.filename = filename
 
 
 ##################
@@ -95,10 +100,7 @@ def parse_cell_range(s, add_one_to_trailing_cell=True):
                 ColNum(final_col.upper()), int(final_row))
 
 
-class XLReader(object):
-    def __init__(self, filename):
-        self.filename = filename
-
+class XLReader(ReaderWriter):
     def read(self, sheets, cell_range, sortby=None, headers=None):
         self.sheets = sheets
         self.cell_range = cell_range
@@ -173,14 +175,15 @@ class XLReader(object):
         return data
 
 
+class XLWriter(ReaderWriter):
+    pass
+
+
 ####################
 # For Pcad netlist #
 ####################
 
-class NestedListReader(object):
-    def __init__(self, filename):
-        self.filename = filename
-
+class NestedListReader(ReaderWriter):
     def read(self):
         return nestedExpr().parseFile(self.filename).asList()[0]
 
@@ -233,10 +236,7 @@ class PcadReader(PcadNaiveReader):
 # For YAML #
 ############
 
-class YamlReader(object):
-    def __init__(self, filename):
-        self.filename = filename
-
+class YamlReader(ReaderWriter):
     def read(self, flattener=flatten, sortby=None):
         with open(self.filename) as f:
             raw = yaml.safe_load(f)
