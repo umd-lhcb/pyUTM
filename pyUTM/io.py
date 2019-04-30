@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Tue Apr 30, 2019 at 01:26 AM -0400
+# Last Change: Tue Apr 30, 2019 at 02:37 AM -0400
 
 import openpyxl
 import re
@@ -176,7 +176,25 @@ class XLReader(ReaderWriter):
 
 
 class XLWriter(ReaderWriter):
-    pass
+    def writetable(self, header, body, initial_row=1, initial_col=ColNum('A')):
+        pass
+
+    @staticmethod
+    def rearrange_table(raw, initial_row, initial_col):
+        arranged = []
+
+        for r in range(1, initial_row):
+            arranged.append([''])
+
+        for r in raw:
+            row = []
+            for i in range(ColNum('A'), initial_col):
+                row.append('')
+            for entry in r:
+                row.append(entry)
+            arranged.append(row)
+
+        return arranged
 
 
 ####################

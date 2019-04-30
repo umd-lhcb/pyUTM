@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Sun Feb 17, 2019 at 09:04 PM -0500
+# Last Change: Tue Apr 30, 2019 at 03:30 AM -0400
 
 import unittest
 # from math import factorial
@@ -11,8 +11,10 @@ sys.path.insert(0, '..')
 
 from pyUTM.io import csv_line
 from pyUTM.io import parse_cell_range
+from pyUTM.io import XLWriter
 from pyUTM.io import PcadReader
 from pyUTM.io import netnode_to_netlist
+from pyUTM.datatype import ColNum
 from pyUTM.datatype import NetNode
 from pyUTM.sim import CurrentFlow
 
@@ -54,6 +56,28 @@ class ParseCellRangeTester(unittest.TestCase):
         self.assertEqual(initial_row, 12)
         self.assertEqual(str(final_col), 'CD')
         self.assertEqual(final_row, 345)
+
+
+class XLWriterTester(unittest.TestCase):
+    def test_rearrange_table_case1(self):
+        self.assertEqual(
+            XLWriter.rearrange_table(
+                [['Header1', 'Header2', 'Header3'], [1, 2, 3], [4, 5, 6]],
+                initial_row=1, initial_col=ColNum('A'),
+            ),
+            [['Header1', 'Header2', 'Header3'], [1, 2, 3], [4, 5, 6]]
+        )
+
+    def test_rearrange_table_case2(self):
+        self.assertEqual(
+            XLWriter.rearrange_table(
+                [['Header1', 'Header2', 'Header3'], [1, 2, 3], [4, 5, 6]],
+                initial_row=3, initial_col=ColNum('B'),
+            ),
+            [[''], [''],
+             ['', 'Header1', 'Header2', 'Header3'], ['', 1, 2, 3], ['', 4, 5, 6]
+             ]
+        )
 
 
 class PcadReaderTester(unittest.TestCase):
