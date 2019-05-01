@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Tue Apr 30, 2019 at 11:45 AM -0400
+# Last Change: Wed May 01, 2019 at 02:54 PM -0400
 
 import openpyxl
 import re
@@ -284,17 +284,16 @@ def netnode_to_netlist(nodes):
     nets = defaultdict(list)
 
     for n in nodes.keys():
-        real_netname = ''
         prop = nodes[n]
         netname, attr = prop['NETNAME'], prop['ATTR']
 
         if netname is None:
-            real_netname += attr
+            real_netname = attr
         elif attr is not None:
             net_head, net_tail = netname.split('_', 1)
-            real_netname += (net_head + attr + net_tail)
+            real_netname = (net_head + attr + net_tail)
         else:
-            real_netname += netname
+            real_netname = netname
 
         if n.DCB is not None:
             nets[real_netname].append((n.DCB, n.DCB_PIN))
