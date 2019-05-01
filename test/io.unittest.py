@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Tue Apr 30, 2019 at 03:30 AM -0400
+# Last Change: Tue Apr 30, 2019 at 11:47 AM -0400
 
 import unittest
 # from math import factorial
@@ -65,7 +65,8 @@ class XLWriterTester(unittest.TestCase):
                 [['Header1', 'Header2', 'Header3'], [1, 2, 3], [4, 5, 6]],
                 initial_row=1, initial_col=ColNum('A'),
             ),
-            [['Header1', 'Header2', 'Header3'], [1, 2, 3], [4, 5, 6]]
+            ([['Header1', 'Header2', 'Header3'], [1, 2, 3], [4, 5, 6]],
+             'A1:C3')
         )
 
     def test_rearrange_table_case2(self):
@@ -74,9 +75,11 @@ class XLWriterTester(unittest.TestCase):
                 [['Header1', 'Header2', 'Header3'], [1, 2, 3], [4, 5, 6]],
                 initial_row=3, initial_col=ColNum('B'),
             ),
-            [[''], [''],
+            ([[''], [''],
              ['', 'Header1', 'Header2', 'Header3'], ['', 1, 2, 3], ['', 4, 5, 6]
-             ]
+              ],
+             'B3:D5'
+             )
         )
 
 

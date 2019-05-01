@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Tue Apr 30, 2019 at 02:37 AM -0400
+# Last Change: Tue Apr 30, 2019 at 11:45 AM -0400
 
 import openpyxl
 import re
@@ -194,7 +194,16 @@ class XLWriter(ReaderWriter):
                 row.append(entry)
             arranged.append(row)
 
-        return arranged
+        # Figure out the cell range of the table
+        # Assuming the dimension of each row is the same
+        anchor_col = initial_col + len(raw[0]) - 1
+        anchor_row = initial_row + len(raw) - 1
+        cell_range = '{0}{1}:{2}{3}'.format(
+            initial_col, initial_row,
+            anchor_col, anchor_row
+        )
+
+        return (arranged, cell_range)
 
 
 ####################
