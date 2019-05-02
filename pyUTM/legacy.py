@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Tue Feb 19, 2019 at 03:23 PM -0500
+# Last Change: Thu May 02, 2019 at 07:48 PM -0400
 
 import re
 
@@ -170,14 +170,20 @@ def legacy_csv_line_pt(node, prop):
 ##################
 
 def PADDING(s):
-    letter, num = filter(None, re.split(r'(\d+)', s))
-    num = '0'+num if len(num) == 1 else num
-    return letter+num
+    if s is None:
+        return s
+    else:
+        letter, num = filter(None, re.split(r'(\d+)', s))
+        num = '0'+num if len(num) == 1 else num
+        return letter+num
 
 
 def DEPADDING(s):
-    letter, num = filter(None, re.split(r'(\d+)', s))
-    return letter+str(int(num))
+    if s is None:
+        return s
+    else:
+        letter, num = filter(None, re.split(r'(\d+)', s))
+        return letter+str(int(num))
 
 
 def PINID(s, padder=DEPADDING):

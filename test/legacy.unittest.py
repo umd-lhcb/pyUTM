@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Thu Dec 20, 2018 at 12:21 PM -0500
+# Last Change: Thu May 02, 2019 at 07:49 PM -0400
 
 import unittest
 
@@ -15,13 +15,19 @@ from pyUTM.legacy import BrkStr
 
 
 class PadderTester(unittest.TestCase):
-    def test_padding(self):
+    def test_padding_case1(self):
         self.assertEqual(PADDING('A1'), 'A01')
         self.assertEqual(PADDING('A11'), 'A11')
 
-    def test_depadding(self):
+    def test_padding_case2(self):
+        self.assertEqual(PADDING(None), None)
+
+    def test_depadding_case1(self):
         self.assertEqual(DEPADDING('A01'), 'A1')
         self.assertEqual(DEPADDING('A11'), 'A11')
+
+    def test_depadding_case2(self):
+        self.assertEqual(DEPADDING(None), None)
 
 
 class PinIdTester(unittest.TestCase):
