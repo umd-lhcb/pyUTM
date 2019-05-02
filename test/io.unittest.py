@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Tue Apr 30, 2019 at 11:47 AM -0400
+# Last Change: Thu May 02, 2019 at 04:19 PM -0400
 
 import unittest
 # from math import factorial
@@ -14,6 +14,7 @@ from pyUTM.io import parse_cell_range
 from pyUTM.io import XLWriter
 from pyUTM.io import PcadReader
 from pyUTM.io import netnode_to_netlist
+from pyUTM.io import prepare_descr_for_xlsx_output
 from pyUTM.datatype import ColNum
 from pyUTM.datatype import NetNode
 from pyUTM.sim import CurrentFlow
@@ -127,6 +128,37 @@ class NetNodeToNetListTester(unittest.TestCase):
             {
                 'JD1_JPL1_unreal': [('JD1', 'A1')],
                 'JD2_JP1_unreal':  [('JD2', 'A2'), ('JP1', 'A1')],
+            }
+        )
+
+
+class PrepareDescrForXlsxOutputTester(unittest.TestCase):
+    def test_prepare_descr_for_xlsx_output_case1(self):
+        descr = {
+            'connector1': [
+                {'prop1': 1, 'prop2': 2},
+                {'prop1': 1.5, 'prop2': 2.5},
+            ],
+            'connector2': [
+                {'prop1': 3, 'prop2': 4},
+                {'prop1': 4.5, 'prop2': 4.5},
+                {'prop1': 5, 'prop2': 5.5},
+            ],
+        }
+        self.assertEqual(
+            prepare_descr_for_xlsx_output(descr),
+            {
+                'connector1': [
+                    ['prop1', 'prop2'],
+                    [1, 2],
+                    [1.5, 2.5]
+                ],
+                'connector2': [
+                    ['prop1', 'prop2'],
+                    [3, 4],
+                    [4.5, 4.5],
+                    [5, 5.5]
+                ],
             }
         )
 

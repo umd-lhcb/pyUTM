@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Thu May 02, 2019 at 02:54 PM -0400
+# Last Change: Thu May 02, 2019 at 04:10 PM -0400
 
 import openpyxl
 import re
@@ -99,6 +99,20 @@ def parse_cell_range(s, add_one_to_trailing_cell=True):
     else:
         return (ColNum(initial_col.upper()), int(initial_row),
                 ColNum(final_col.upper()), int(final_row))
+
+
+def prepare_descr_for_xlsx_output(descr):
+    output = {}
+    for k, v in descr.items():
+        headers = list(v[0].keys())
+        output[k] = []
+        output[k].append(headers)
+
+        for i in v:
+            row = [i[k] for k in headers]
+            output[k].append(row)
+
+    return output
 
 
 class XLReader(ReaderWriter):
