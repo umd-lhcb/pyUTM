@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Thu May 02, 2019 at 04:10 PM -0400
+# Last Change: Thu May 02, 2019 at 04:22 PM -0400
 
 import openpyxl
 import re
@@ -18,6 +18,7 @@ from openpyxl.worksheet.table import Table, TableStyleInfo
 from .datatype import range, ColNum, ExcelCell
 from .datatype import NetNode
 from .common import flatten
+from .legacy import PADDING
 
 
 ##############################
@@ -109,7 +110,8 @@ def prepare_descr_for_xlsx_output(descr):
         output[k].append(headers)
 
         for i in v:
-            row = [i[k] for k in headers]
+            row = [PADDING(i[k]) if k in ['SEAM pin', 'Pigtail pin']
+                   else i[k] for k in headers]
             output[k].append(row)
 
     return output

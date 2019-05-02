@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Thu May 02, 2019 at 04:19 PM -0400
+# Last Change: Thu May 02, 2019 at 04:24 PM -0400
 
 import unittest
 # from math import factorial
@@ -158,6 +158,35 @@ class PrepareDescrForXlsxOutputTester(unittest.TestCase):
                     [3, 4],
                     [4.5, 4.5],
                     [5, 5.5]
+                ],
+            }
+        )
+
+    def test_prepare_descr_for_xlsx_output_case2(self):
+        descr = {
+            'connector1': [
+                {'prop1': 1, 'Pigtail pin': 'A1'},
+                {'prop1': 1.5, 'Pigtail pin': 'B5'},
+            ],
+            'connector2': [
+                {'prop1': 3, 'SEAM pin': 'A11'},
+                {'prop1': 4.5, 'SEAM pin': 'A10'},
+                {'prop1': 5, 'SEAM pin': 'D1'},
+            ],
+        }
+        self.assertEqual(
+            prepare_descr_for_xlsx_output(descr),
+            {
+                'connector1': [
+                    ['prop1', 'Pigtail pin'],
+                    [1, 'A01'],
+                    [1.5, 'B05']
+                ],
+                'connector2': [
+                    ['prop1', 'SEAM pin'],
+                    [3, 'A11'],
+                    [4.5, 'A10'],
+                    [5, 'D01']
                 ],
             }
         )
