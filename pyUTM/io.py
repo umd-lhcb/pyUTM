@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Thu May 02, 2019 at 04:22 PM -0400
+# Last Change: Thu May 02, 2019 at 07:53 PM -0400
 
 import openpyxl
 import re
@@ -110,9 +110,10 @@ def prepare_descr_for_xlsx_output(descr):
         output[k].append(headers)
 
         for i in v:
-            row = [PADDING(i[k]) if k in ['SEAM pin', 'Pigtail pin']
-                   else i[k] for k in headers]
-            output[k].append(row)
+            temp = [PADDING(i[k]) if k in ['SEAM pin', 'Pigtail pin']
+                    else i[k] for k in headers]
+            final = [i if i is not None else '' for i in temp]
+            output[k].append(final)
 
     return output
 
