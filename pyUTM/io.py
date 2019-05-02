@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Wed May 01, 2019 at 02:54 PM -0400
+# Last Change: Thu May 02, 2019 at 02:54 PM -0400
 
 import openpyxl
 import re
@@ -13,6 +13,7 @@ from itertools import zip_longest
 from multipledispatch import dispatch
 from pathlib import Path
 from types import FunctionType
+from openpyxl.worksheet.table import Table, TableStyleInfo
 
 from .datatype import range, ColNum, ExcelCell
 from .datatype import NetNode
@@ -176,8 +177,46 @@ class XLReader(ReaderWriter):
 
 
 class XLWriter(ReaderWriter):
-    def writetable(self, header, body, initial_row=1, initial_col=ColNum('A')):
-        pass
+    def write(self, data, **kwargs):
+        wb = openpyxl.Workbook()
+
+        # Remove the default sheet
+        wb.remove(wb['Sheet'])
+
+        for sheet_name, sheet_data in data.items():
+            ws = self.create_sheet(wb, sheet_name)
+
+            headers = sheet_data[0]
+            body = sheet_data[1:]
+            self.write_table(ws, sheet_name, headers, body, **kwargs)
+
+        wb.save(self.filename)
+
+    @classmethod
+    def write_table(cls, ws, table_title, headers, body,
+                    initial_row=1, initial_col=ColNum('A'),
+                    table_style=TableStyleInfo(
+                        name='TableStyleMedium2', showFirstColumn=False,
+                        showLastColumn=False, showRowStripes=True,
+                        showColumnStripes=False
+                    )
+                    ):
+        raw_data = [headers] + body
+        arranged_data, cell_range = cls.rearrange_table(
+            raw_data, initial_row, initial_col)
+
+        for row in arranged_data:
+            ws.append(row)
+
+        tab = Table(displayName=table_title, ref=cell_range)
+        tab.tableStyleInfo = table_style
+        ws.add_table(tab)
+
+    @staticmethod
+    def create_sheet(wb, name):
+        ws = wb.create_sheet(name)
+        ws.title = name
+        return ws
 
     @staticmethod
     def rearrange_table(raw, initial_row, initial_col):
