@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Tue Mar 05, 2019 at 06:01 PM -0500
+# Last Change: Fri May 03, 2019 at 02:36 PM -0400
 
 from __future__ import annotations
 
@@ -183,7 +183,7 @@ class RuleNet(RuleBase):
 
 
 class RuleNetlist(RuleNet):
-    def __init__(self, ref_netlist):
+    def __init__(self, ref_netlist=None):
         self.ref_netlist = ref_netlist
 
     def filter(self, netname, components):
