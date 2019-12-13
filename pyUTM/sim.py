@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Wed Feb 13, 2019 at 08:02 PM -0500
+# Last Change: Fri Dec 13, 2019 at 01:53 PM -0500
 
 import re
 
@@ -16,7 +16,7 @@ class CurrentFlow(object):
     def __init__(self, passable=[r'^R\d+', r'^C\d+', r'^NT\d+']):
         self.passable = passable
 
-    def do(self, nets):
+    def do(self, nets, max_num_of_recursion=900):
         net_to_comp = self.strip(nets)
         comp_to_net = self.swap_key_to_value(net_to_comp)
         equivalent_nets = []
@@ -25,13 +25,17 @@ class CurrentFlow(object):
             # Always process the first net
             if len(equivalent_nets) == 0:
                 equivalent_group = self.find_all_flows(
-                    net, net_to_comp, comp_to_net)
+                    net, net_to_comp, comp_to_net,
+                    max_num_of_recursion=max_num_of_recursion
+                )
                 equivalent_nets.append(equivalent_group)
 
             # For subsequent nets, only process if it is not in any known group
             elif True not in map(lambda x: net in x, equivalent_nets):
                 equivalent_group = self.find_all_flows(
-                    net, net_to_comp, comp_to_net)
+                    net, net_to_comp, comp_to_net,
+                    max_num_of_recursion=max_num_of_recursion
+                )
                 equivalent_nets.append(equivalent_group)
 
             else:
@@ -64,10 +68,7 @@ class CurrentFlow(object):
             connected_nets = []
             hopped_components = []
         elif num_of_recursion > max_num_of_recursion:
-            raise ValueError(
-                'Cannot exhaust hoppable components within {}. Giving up.'.format(
-                    max_num_of_recursion
-                ))
+            return connected_nets
 
         if netname not in connected_nets:
             connected_nets.append(netname)
