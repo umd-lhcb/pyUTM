@@ -33,16 +33,16 @@ jd_swapping_true = {
 
 # Table for swapping JD# from Proto (right side) to Mirror (left side)
 jd_swapping_mirror = {
-    'JD0': 'JD1',
-    'JD1': 'JD5',
+    'JD0': 'JD4',
+    'JD1': 'JD0',
     'JD2': 'JD3',
     'JD3': 'JD2',
-    'JD4': 'JD0',
-    'JD5': 'JD4',
-    'JD6': 'JD7',
-    'JD7': 'JD9',
-    'JD8': 'JD6',
-    'JD9': 'JD8',
+    'JD4': 'JD5',
+    'JD5': 'JD1',
+    'JD6': 'JD8',
+    'JD7': 'JD6',
+    'JD8': 'JD9',
+    'JD9': 'JD7',
     'JD10': 'JD11',
     'JD11': 'JD10'
 }
