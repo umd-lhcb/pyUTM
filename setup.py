@@ -1,5 +1,5 @@
 # License: BSD 2-clause
-# Last Change: Fri Dec 11, 2020 at 12:14 AM +0100
+# Last Change: Fri Dec 11, 2020 at 12:37 AM +0100
 
 import setuptools
 import codecs
@@ -47,7 +47,7 @@ setup(
     packages=setuptools.find_packages(),
     include_package_data=True,
     install_requires=[
-        'openpyxm',
+        'openpyxl',
         'pyparsing',
         'pyyaml',
         'multipledispatch',
