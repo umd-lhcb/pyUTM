@@ -19,8 +19,9 @@
       in
       rec {
         packages = {
-          pyUTMEnv = pkgs.python3.withPackages (ps:
-            with ps; [ pkgs.pythonPackages.pyUTM ]);
+          pyUTMEnv = pkgs.python3.withPackages (ps: with ps; [
+            pkgs.pythonPackages.pyUTM
+          ]);
         };
 
         defaultPackage = packages.pyUTMEnv;
