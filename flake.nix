@@ -6,11 +6,14 @@
   };
 
   outputs = { self, nixpkgs, flake-utils }:
+    {
+      overlay = import ./nix/overlay.nix;
+    } //
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = (import nixpkgs {
           inherit system;
-          overlays = [ (import ./nix/overlay.nix) ];
+          overlays = [ self.overlay ];
         });
       in
       rec {
@@ -20,6 +23,5 @@
 
         defaultPackage = packages.pyUTM;
         devShell = packages.pyUTM.env;
-        overlay = (import ./nix/overlay.nix);
       });
 }
