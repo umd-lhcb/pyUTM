@@ -12,10 +12,10 @@
     //
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = (import nixpkgs {
+        pkgs = import nixpkgs {
           inherit system;
           overlays = [ self.overlay ];
-        });
+        };
       in
       rec {
         packages = {
