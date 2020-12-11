@@ -19,10 +19,10 @@
       in
       rec {
         packages = {
-          pyUTM = pkgs.python3.withPackages (ps: with ps; [ pyUTM ]);
+          pyUTMEnv = pkgs.python3.withPackages (ps: with ps; [ pyUTM ]);
         };
 
-        defaultPackage = packages.pyUTM;
-        devShell = packages.pyUTM.env;
+        defaultPackage = packages.pyUTMEnv;
+        devShell = packages.pyUTMEnv.env;
       });
 }
