@@ -14,7 +14,11 @@
         });
       in
       rec {
-        defaultPackage = pkgs.python3.pkgs.pyUTM;
-        devShell = (pkgs.python3.withPackages (ps: with ps; [ pyUTM ])).env;
+        packages = {
+          pyUTMEnv = pkgs.python3.withPackages (ps: with ps; [ pyUTM ]);
+        };
+
+        defaultPackage = packages.pyUTMEnv;
+        devShell = packages.pyUTMEnv.env;
       });
 }
