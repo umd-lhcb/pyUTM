@@ -10,7 +10,7 @@ buildPythonPackage rec {
   pname = "pyUTM";
   version = "0.1";
 
-  src = builtins.path { path = ./..; name = "pyUTM"; };
+  src = builtins.path { path = ./..; name = pname; };
 
   propagatedBuildInputs = [
     openpyxl
