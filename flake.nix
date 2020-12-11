@@ -20,5 +20,6 @@
 
         defaultPackage = packages.pyUTM;
         devShell = packages.pyUTM.env;
+        overlay = (import ./nix/overlay.nix);
       });
 }
