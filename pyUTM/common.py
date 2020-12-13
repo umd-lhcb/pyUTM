@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Fri Apr 05, 2019 at 12:45 PM -0400
+# Last Change: Sun Dec 13, 2020 at 09:25 PM +0100
 
 from collections import defaultdict
 
@@ -258,9 +258,9 @@ all_pepis = {
 #############################
 
 # Take a list of dictionaries with the same dimensionality
-def transpose(l):
+def transpose(lst):
     result = defaultdict(list)
-    for d in l:
+    for d in lst:
         for k in d.keys():
             result[k].append(d[k])
     return dict(result)
@@ -270,9 +270,9 @@ def unpack_one_elem_dict(d):
     return tuple(d.items())[0]
 
 
-def flatten(l, header='PlaceHolder'):
+def flatten(lst, header='PlaceHolder'):
     result = []
-    for d in l:
+    for d in lst:
         key, value = unpack_one_elem_dict(d)
         value[header] = key
         result.append(value)
@@ -288,19 +288,19 @@ def flatten_more(d, header='PlaceHolder'):
     return result
 
 
-def unflatten(l, header):
+def unflatten(lst, header):
     result = []
-    for d in l:
+    for d in lst:
         key = d[header]
         del d[header]
         result.append({key: d})
     return result
 
 
-def unflatten_all(d, *args):
+def unflatten_all(d, header):
     result = defaultdict(dict)
     for k, items in d.items():
-        for i in unflatten(items, *args):
+        for i in unflatten(items, header):
             pin, prop = unpack_one_elem_dict(i)
             result[k][pin] = prop
     return result
