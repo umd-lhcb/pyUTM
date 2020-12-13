@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Sun Dec 13, 2020 at 09:25 PM +0100
+# Last Change: Sun Dec 13, 2020 at 10:26 PM +0100
 
 from collections import defaultdict
 
@@ -63,7 +63,7 @@ jp_flex_type_proto = {
     'JP11': 'S-2-M',
 }
 
-# Table for translating JP# from Proto (right side) to Mirror (left side)
+# Table for translating JP# from Proto (left side) to Mirror (right side)
 jp_swapping_mirror = {
     'JP0': 'JP2',
     'JP1': 'JP3',
