@@ -21,6 +21,11 @@
         packages = {
           pyUTMEnv = pkgs.python3.withPackages (ps: with ps; [
             pkgs.pythonPackages.pyUTM
+
+            # Dev tools
+            jedi
+            flake8
+            pylint
           ]);
         };
 
