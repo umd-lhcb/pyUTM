@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Sun Dec 13, 2020 at 10:26 PM +0100
+# Last Change: Sun Dec 13, 2020 at 10:52 PM +0100
 
 from collections import defaultdict
 
@@ -77,6 +77,46 @@ jp_swapping_mirror = {
     'JP9': 'JP11',
     'JP10': 'JP8',
     'JP11': 'JP9',
+}
+
+# 'False' -> no depopulation
+# 'True'  -> depopulation in P/D type BPs
+# 'None'  -> doesn't exist in all variants
+# Straight from:
+#   https://github.com/ZishuoYang/UT-Backplane-mapping/issues/59
+jp_depop_true = {
+    'JP0': {'P1W': False, 'P1E': True, 'P2W': None, 'P2E': False, 'P3': False, 'P4': False},
+    'JP1': {'P1W': False, 'P1E': True, 'P2W': True, 'P2E': False, 'P3': False, 'P4': True},
+    'JP2': {'P1W': False, 'P1E': True, 'P2W': True, 'P2E': False, 'P3': False, 'P4': True},
+    'JP3': {'P1W': False, 'P1E': True, 'P2W': None, 'P2E': False, 'P3': False, 'P4': False},
+    'JP4': {'P1W': False, 'P1E': True, 'P2W': None, 'P2E': False, 'P3': False, 'P4': False},
+    'JP5': {'P1W': False, 'P1E': True, 'P2W': None, 'P2E': False, 'P3': False, 'P4': None},
+    'JP6': {'P1W': False, 'P1E': True, 'P2W': None, 'P2E': False, 'P3': False, 'P4': None},
+    'JP7': {'P1W': False, 'P1E': True, 'P2W': None, 'P2E': False, 'P3': False, 'P4': False},
+    'JP8': {'P1W': False, 'P1E': None, 'P2W': None, 'P2E': False, 'P3': False, 'P4': False},
+    'JP9': {'P1W': False, 'P1E': None, 'P2W': None, 'P2E': False, 'P3': False, 'P4': None},
+    'JP10': {'P1W': False, 'P1E': None, 'P2W': None, 'P2E': False, 'P3': False, 'P4': None},
+    'JP11': {'P1W': False, 'P1E': None, 'P2W': None, 'P2E': False, 'P3': False, 'P4': False}
+}
+
+jp_depop_mirror = {jp_swapping_mirror[jp]: jp_depop_true[jp]
+                   for jp in jp_depop_true.keys()}
+
+# 'False' -> no depopulation
+# 'True'  -> depopulation
+jd_depop = {
+    'JD0': {'F': False, 'P': False, 'D': False},
+    'JD1': {'F': False, 'P': False, 'D': False},
+    'JD2': {'F': False, 'P': True, 'D': True},
+    'JD3': {'F': False, 'P': True, 'D': True},
+    'JD4': {'F': False, 'P': False, 'D': False},
+    'JD5': {'F': False, 'P': False, 'D': False},
+    'JD6': {'F': False, 'P': False, 'D': False},
+    'JD7': {'F': False, 'P': False, 'D': False},
+    'JD8': {'F': False, 'P': False, 'D': False},
+    'JD9': {'F': False, 'P': False, 'D': False},
+    'JD10': {'F': False, 'P': False, 'D': True},
+    'JD11': {'F': False, 'P': False, 'D': True},
 }
 
 all_pepis = {
