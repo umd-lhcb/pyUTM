@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Thu May 02, 2019 at 04:24 PM -0400
+# Last Change: Mon Dec 14, 2020 at 04:05 PM +0100
 
 import unittest
 # from math import factorial
@@ -15,6 +15,7 @@ from pyUTM.io import XLWriter
 from pyUTM.io import PcadReader
 from pyUTM.io import netnode_to_netlist
 from pyUTM.io import prepare_descr_for_xlsx_output
+from pyUTM.io import WirelistNaiveReader
 from pyUTM.datatype import ColNum
 from pyUTM.datatype import NetNode
 from pyUTM.sim import CurrentFlow
@@ -189,6 +190,20 @@ class PrepareDescrForXlsxOutputTester(unittest.TestCase):
                     [5, 'D01']
                 ],
             }
+        )
+
+
+class WirelistNaiveReaderTester(unittest.TestCase):
+    def test_wire_list_parse(self):
+        reader = WirelistNaiveReader('./true_ppp.sample.wirelist')
+        result = reader.read()
+        self.assertEqual(
+            result['JD0_JPL0_1V5_Master'],
+            [('P21', '1'), ('P27', '1'), ('P33', '1')]
+        )
+        self.assertEqual(
+            result['JP0 JPU0 P1E LV Return'],
+            [('P6', '15')]
         )
 
 
