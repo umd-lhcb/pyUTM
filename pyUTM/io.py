@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Mon Dec 14, 2020 at 03:07 AM +0100
+# Last Change: Mon Dec 14, 2020 at 04:00 PM +0100
 
 import openpyxl
 import re
@@ -310,9 +310,57 @@ class PcadReader(PcadNaiveReader):
             # Update the head net
             for n in tail:
                 nets[head] += nets[n]
-            # Now make sure all nets in tail are equivalent to head
-            for n in tail:
+                # Now make sure all nets in tail are equivalent to head
                 nets[n] = nets[head]
+
+
+################
+# For wirelist #
+################
+
+class WirelistNaiveReader(ReaderWriter):
+    def read(self, wire_list_name='Wire List'):
+        with open(self.filename, 'r') as f:
+            raw = f.readlines()
+        trees = self.parse_into_trees(raw)
+        return self.parse_wire_list(trees[wire_list_name])
+
+    @staticmethod
+    def parse_into_trees(lines):
+        output = defaultdict(list)
+        output['Unnamed']
+        output_ptr = output['Unnamed']
+
+        for line in lines:
+            if not line.startswith('<<<'):
+                output_ptr.append(line.strip())
+            else:
+                key = line.replace('<<<', '').replace('>>>', '').strip()
+                output_ptr = output[key]
+
+        return output
+
+    @staticmethod
+    def parse_wire_list(raw):
+        output = {}
+        garbage = []
+        output_ptr = garbage
+
+        for line in raw:
+            if not line.startswith('['):
+                fields = line.strip().split()
+                try:
+                    output_ptr.append((fields[0], fields[1]))
+                except Exception:
+                    pass
+
+            else:
+                key = line.replace('[', '').replace(']', '').strip()
+                key = ' '.join(key.split(' ')[1:])
+                output[key] = []
+                output_ptr = output[key]
+
+        return output
 
 
 ############
