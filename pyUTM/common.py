@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Thu Dec 17, 2020 at 02:44 AM +0100
+# Last Change: Thu Dec 17, 2020 at 02:52 AM +0100
 
 from collections import defaultdict
 
@@ -63,7 +63,12 @@ jp_flex_type_proto = {
     'JP11': 'S-2-M',
 }
 
-# Table for translating JP# from Proto (left side) to Mirror (right side)
+# NOTE: This comment is correct
+# Table for translating JP# from Proto (RIGHT side) to Mirror (LEFT side)
+# This may seem weird at first, but this mapping allow us to do something like
+# this:
+#       mirror_mapping = {jp: true_mapping[jp_swapping_mirror[jp]]
+#                         for jp in true_mapping}
 jp_swapping_mirror = {
     'JP0': 'JP2',
     'JP1': 'JP3',
