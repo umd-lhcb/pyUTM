@@ -22,6 +22,9 @@
           pyUTMEnv = pkgs.python3.withPackages (ps: with ps; [
             pkgs.pythonPackages.pyUTM
 
+            # Other useful Python packages
+            tabulate
+
             # Dev tools
             jedi
             flake8
