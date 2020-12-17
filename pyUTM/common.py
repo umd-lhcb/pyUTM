@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # License: BSD 2-clause
-# Last Change: Sun Dec 13, 2020 at 10:52 PM +0100
+# Last Change: Thu Dec 17, 2020 at 02:44 AM +0100
 
 from collections import defaultdict
 
@@ -99,7 +99,7 @@ jp_depop_true = {
     'JP11': {'P1W': False, 'P1E': None, 'P2W': None, 'P2E': False, 'P3': False, 'P4': False}
 }
 
-jp_depop_mirror = {jp_swapping_mirror[jp]: jp_depop_true[jp]
+jp_depop_mirror = {jp: jp_depop_true[jp_swapping_mirror[jp]]
                    for jp in jp_depop_true.keys()}
 
 # 'False' -> no depopulation
