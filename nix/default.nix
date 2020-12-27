@@ -8,7 +8,7 @@
 
 buildPythonPackage rec {
   pname = "pyUTM";
-  version = "0.1";
+  version = "0.2.0";
 
   src = builtins.path { path = ./..; name = pname; };
 
