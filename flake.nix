@@ -2,6 +2,7 @@
   description = "Python library for Pcad netlist parsing and mapping generation";
 
   inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-20.09";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
